@@ -9,6 +9,8 @@ import Process
 
 type AppLink
   = AppHome
+  | AppGallery
+  | AppContact
   | AppNotFound String
 
 
@@ -19,6 +21,10 @@ parseAppLinks s =
       parse s' =
         if s' == "home"
         then AppHome
+        else if s' == "gallery"
+        then AppGallery
+        else if s' == "contact"
+        then AppContact
         else AppNotFound s'
 
   in  case String.uncons s of
@@ -33,13 +39,17 @@ printAppLinks : AppLink -> String
 printAppLinks l =
   let printed =
         case l of
-          AppHome -> "home"
+          AppHome       -> "home"
+          AppGallery    -> "gallery"
+          AppContact    -> "contact"
           AppNotFound _ -> "not-found"
   in  "#" ++ printed
 
 
 type alias Links a =
-  { toHome : a
+  { toHome    : a
+  , toGallery : a
+  , toContact : a
   }
 
 
