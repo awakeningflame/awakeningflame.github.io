@@ -30,8 +30,8 @@ update action model =
 
 view : Links a -> Model -> Html (Result Msg a)
 view links model =
-  div [class "ui top fixed menu"]
-    [ a [ class <| "item"
+  div [class "ui top fixed inverted menu"]
+    [ a [ class <| "violet item"
             ++ case model.currentPage of
                  AppHome -> " active"
                  _       -> ""
@@ -40,7 +40,7 @@ view links model =
         [ i [class "icon home"] []
         , text "Home"
         ]
-    , a [ class <| "item"
+    , a [ class <| "teal item"
             ++ case model.currentPage of
                  AppGallery -> " active"
                  _          -> ""
@@ -50,7 +50,7 @@ view links model =
         , text "Gallery"
         ]
     , div [class "right menu"]
-        [ a [ class <| "item"
+        [ a [ class <| "green item"
                 ++ case model.currentPage of
                     AppContact -> " active"
                     _          -> ""

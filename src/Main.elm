@@ -2,6 +2,10 @@ module Main exposing (..)
 
 import Links exposing (AppLink (..), Links)
 import Nav
+import Pages.Home     as Home
+import Pages.Gallery  as Gallery
+import Pages.Contact  as Contact
+import Pages.NotFound as NotFound
 
 import Html            exposing (..)
 import Html.Attributes exposing (..)
@@ -55,23 +59,25 @@ view model =
                         Err x -> NavMsg x
                         Ok  x -> x)
         <| Nav.view links model.nav
-    , div [] -- pusher
+    , div [ style [ ("padding-top", "4.5rem")
+                  ]
+          ] -- pusher
         [ div [ class "ui grid container"
-              , style [("padding-top", "4rem")]
+              , style [ ("background","rgba(255,255,255,0.8)")
+                      ]
               ]
-            [ viewCurrentPage model
-            ]
+            <| viewCurrentPage model
         ]
     ]
 
 
-viewCurrentPage : Model -> Html Msg
+viewCurrentPage : Model -> List (Html Msg)
 viewCurrentPage model =
   case model.currentPage of
-    AppHome       -> text "home"
-    AppGallery    -> text "gallery"
-    AppContact    -> text "contact"
-    AppNotFound s -> text <| "Page \"" ++ s ++ "\" not found. Redirecting..."
+    AppHome       -> Home.view
+    AppGallery    -> Gallery.view
+    AppContact    -> Contact.view
+    AppNotFound s -> NotFound.view s
 
 
 subscriptions : Model -> Sub Msg

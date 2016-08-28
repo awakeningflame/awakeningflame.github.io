@@ -4537,7 +4537,7 @@ var _awakeiningflame$awakeningflame$Links$notFoundRedirect = F2(
 			return _awakeiningflame$awakeningflame$Cmd_Extra$performLog(
 				A2(
 					_elm_lang$core$Task$andThen,
-					_elm_lang$core$Process$sleep(_elm_lang$core$Time$second),
+					_elm_lang$core$Process$sleep(3 * _elm_lang$core$Time$second),
 					function (_p1) {
 						return _elm_lang$core$Task$succeed(toPage);
 					}));
@@ -8390,7 +8390,7 @@ var _awakeiningflame$awakeningflame$Nav$view = F2(
 			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$class('ui top fixed menu')
+					_elm_lang$html$Html_Attributes$class('ui top fixed inverted menu')
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
@@ -8401,7 +8401,7 @@ var _awakeiningflame$awakeningflame$Nav$view = F2(
 							_elm_lang$html$Html_Attributes$class(
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								'item',
+								'violet item',
 								function () {
 									var _p0 = model.currentPage;
 									if (_p0.ctor === 'AppHome') {
@@ -8432,7 +8432,7 @@ var _awakeiningflame$awakeningflame$Nav$view = F2(
 							_elm_lang$html$Html_Attributes$class(
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								'item',
+								'teal item',
 								function () {
 									var _p1 = model.currentPage;
 									if (_p1.ctor === 'AppGallery') {
@@ -8471,7 +8471,7 @@ var _awakeiningflame$awakeningflame$Nav$view = F2(
 									_elm_lang$html$Html_Attributes$class(
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										'item',
+										'green item',
 										function () {
 											var _p2 = model.currentPage;
 											if (_p2.ctor === 'AppContact') {
@@ -8517,6 +8517,148 @@ var _awakeiningflame$awakeningflame$Nav$Model = function (a) {
 };
 var _awakeiningflame$awakeningflame$Nav$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
+};
+
+var _awakeiningflame$awakeningflame$Pages_Home$view = _elm_lang$core$Native_List.fromArray(
+	[
+		A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('one column row')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('column')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$h1,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('ui header')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Home')
+							]))
+					]))
+			]))
+	]);
+
+var _awakeiningflame$awakeningflame$Pages_Gallery$view = _elm_lang$core$Native_List.fromArray(
+	[
+		A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('one column row')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('column')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$h1,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('ui header')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Gallery')
+							]))
+					]))
+			]))
+	]);
+
+var _awakeiningflame$awakeningflame$Pages_Contact$view = _elm_lang$core$Native_List.fromArray(
+	[
+		A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('one column row')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('column')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$h1,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('ui header')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Contact')
+							]))
+					]))
+			]))
+	]);
+
+var _awakeiningflame$awakeningflame$Pages_NotFound$view = function (s) {
+	return _elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('one column row')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('column')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$h1,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('ui header')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text('404 - Not Found')
+								])),
+							A2(
+							_elm_lang$html$Html$p,
+							_elm_lang$core$Native_List.fromArray(
+								[]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'The page \"',
+										A2(_elm_lang$core$Basics_ops['++'], s, '\" was not found. Redirecting you to the homepage...')))
+								]))
+						]))
+				]))
+		]);
 };
 
 var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
@@ -9093,17 +9235,13 @@ var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
 	var _p0 = model.currentPage;
 	switch (_p0.ctor) {
 		case 'AppHome':
-			return _elm_lang$html$Html$text('home');
+			return _awakeiningflame$awakeningflame$Pages_Home$view;
 		case 'AppGallery':
-			return _elm_lang$html$Html$text('gallery');
+			return _awakeiningflame$awakeningflame$Pages_Gallery$view;
 		case 'AppContact':
-			return _elm_lang$html$Html$text('contact');
+			return _awakeiningflame$awakeningflame$Pages_Contact$view;
 		default:
-			return _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'Page \"',
-					A2(_elm_lang$core$Basics_ops['++'], _p0._0, '\" not found. Redirecting...')));
+			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p0._0);
 	}
 };
 var _awakeiningflame$awakeningflame$Main$Model = F2(
@@ -9157,7 +9295,13 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
-					[]),
+					[
+						_elm_lang$html$Html_Attributes$style(
+						_elm_lang$core$Native_List.fromArray(
+							[
+								{ctor: '_Tuple2', _0: 'padding-top', _1: '4.5rem'}
+							]))
+					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
 						A2(
@@ -9168,13 +9312,10 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 								_elm_lang$html$Html_Attributes$style(
 								_elm_lang$core$Native_List.fromArray(
 									[
-										{ctor: '_Tuple2', _0: 'padding-top', _1: '4rem'}
+										{ctor: '_Tuple2', _0: 'background', _1: 'rgba(255,255,255,0.8)'}
 									]))
 							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_awakeiningflame$awakeningflame$Main$viewCurrentPage(model)
-							]))
+						_awakeiningflame$awakeningflame$Main$viewCurrentPage(model))
 					]))
 			]));
 };

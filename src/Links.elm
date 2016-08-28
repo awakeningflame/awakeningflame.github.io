@@ -58,5 +58,5 @@ notFoundRedirect link toPage =
   case link of
     AppNotFound _ ->
       Task.performLog <|
-        (Process.sleep Time.second) `Task.andThen` (\_ -> Task.succeed toPage)
+        (Process.sleep (3 * Time.second)) `Task.andThen` (\_ -> Task.succeed toPage)
     _ -> Cmd.none
