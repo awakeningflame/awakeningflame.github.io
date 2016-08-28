@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "",
-    "repository": "https://github.com/awakeiningflame/awakeningflame.github.io.git",
+    "repository": "https://github.com/awakeiningflame/awakeningflame.git",
     "license": "BSD3",
     "source-directories": [
         "src"

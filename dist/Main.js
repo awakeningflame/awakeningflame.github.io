@@ -2962,7 +2962,7 @@ var _elm_lang$core$Task$cmdMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
 
-var _awakeiningflame$awakeningflame.github.io$Cmd_Extra$performLog = A2(
+var _awakeiningflame$awakeningflame$Cmd_Extra$performLog = A2(
 	_elm_lang$core$Task$perform,
 	function (_p0) {
 		return _elm_lang$core$Native_Utils.crash(
@@ -2974,8 +2974,8 @@ var _awakeiningflame$awakeningflame.github.io$Cmd_Extra$performLog = A2(
 			_elm_lang$core$Basics$toString(_p0));
 	},
 	_elm_lang$core$Basics$identity);
-var _awakeiningflame$awakeningflame.github.io$Cmd_Extra$mkCmd = function (_p1) {
-	return _awakeiningflame$awakeningflame.github.io$Cmd_Extra$performLog(
+var _awakeiningflame$awakeningflame$Cmd_Extra$mkCmd = function (_p1) {
+	return _awakeiningflame$awakeningflame$Cmd_Extra$performLog(
 		_elm_lang$core$Task$succeed(_p1));
 };
 
@@ -4530,11 +4530,11 @@ var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
 var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
 var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
 
-var _awakeiningflame$awakeningflame.github.io$Links$notFoundRedirect = F2(
+var _awakeiningflame$awakeningflame$Links$notFoundRedirect = F2(
 	function (link, toPage) {
 		var _p0 = link;
 		if (_p0.ctor === 'AppNotFound') {
-			return _awakeiningflame$awakeningflame.github.io$Cmd_Extra$performLog(
+			return _awakeiningflame$awakeningflame$Cmd_Extra$performLog(
 				A2(
 					_elm_lang$core$Task$andThen,
 					_elm_lang$core$Process$sleep(_elm_lang$core$Time$second),
@@ -4545,7 +4545,7 @@ var _awakeiningflame$awakeningflame.github.io$Links$notFoundRedirect = F2(
 			return _elm_lang$core$Platform_Cmd$none;
 		}
 	});
-var _awakeiningflame$awakeningflame.github.io$Links$printAppLinks = function (l) {
+var _awakeiningflame$awakeningflame$Links$printAppLinks = function (l) {
 	var printed = function () {
 		var _p2 = l;
 		if (_p2.ctor === 'AppHome') {
@@ -4556,24 +4556,24 @@ var _awakeiningflame$awakeningflame.github.io$Links$printAppLinks = function (l)
 	}();
 	return A2(_elm_lang$core$Basics_ops['++'], '#', printed);
 };
-var _awakeiningflame$awakeningflame.github.io$Links$Links = function (a) {
+var _awakeiningflame$awakeningflame$Links$Links = function (a) {
 	return {toHome: a};
 };
-var _awakeiningflame$awakeningflame.github.io$Links$AppNotFound = function (a) {
+var _awakeiningflame$awakeningflame$Links$AppNotFound = function (a) {
 	return {ctor: 'AppNotFound', _0: a};
 };
-var _awakeiningflame$awakeningflame.github.io$Links$AppHome = {ctor: 'AppHome'};
-var _awakeiningflame$awakeningflame.github.io$Links$parseAppLinks = function (s) {
+var _awakeiningflame$awakeningflame$Links$AppHome = {ctor: 'AppHome'};
+var _awakeiningflame$awakeningflame$Links$parseAppLinks = function (s) {
 	var parse = function (s$) {
-		return _elm_lang$core$Native_Utils.eq(s$, 'home') ? _awakeiningflame$awakeningflame.github.io$Links$AppHome : _awakeiningflame$awakeningflame.github.io$Links$AppNotFound(s$);
+		return _elm_lang$core$Native_Utils.eq(s$, 'home') ? _awakeiningflame$awakeningflame$Links$AppHome : _awakeiningflame$awakeningflame$Links$AppNotFound(s$);
 	};
 	var _p3 = _elm_lang$core$String$uncons(s);
 	if (_p3.ctor === 'Nothing') {
-		return _awakeiningflame$awakeningflame.github.io$Links$AppHome;
+		return _awakeiningflame$awakeningflame$Links$AppHome;
 	} else {
 		return (!_elm_lang$core$Native_Utils.eq(
 			_p3._0._0,
-			_elm_lang$core$Native_Utils.chr('#'))) ? _awakeiningflame$awakeningflame.github.io$Links$AppNotFound(s) : parse(_p3._0._1);
+			_elm_lang$core$Native_Utils.chr('#'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : parse(_p3._0._1);
 	}
 };
 
@@ -8939,82 +8939,108 @@ var _elm_lang$navigation$Navigation$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Navigation'] = {pkg: 'elm-lang/navigation', init: _elm_lang$navigation$Navigation$init, onEffects: _elm_lang$navigation$Navigation$onEffects, onSelfMsg: _elm_lang$navigation$Navigation$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$navigation$Navigation$cmdMap, subMap: _elm_lang$navigation$Navigation$subMap};
 
-var _awakeiningflame$awakeningflame.github.io$Main$urlParser = _elm_lang$navigation$Navigation$makeParser(
+var _awakeiningflame$awakeningflame$Main$urlParser = _elm_lang$navigation$Navigation$makeParser(
 	function (loc) {
-		return _awakeiningflame$awakeningflame.github.io$Links$parseAppLinks(loc.hash);
+		return _awakeiningflame$awakeningflame$Links$parseAppLinks(loc.hash);
 	});
-var _awakeiningflame$awakeningflame.github.io$Main$subscriptions = function (model) {
+var _awakeiningflame$awakeningflame$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _awakeiningflame$awakeningflame.github.io$Main$view = function (model) {
-	var _p0 = model.currentPage;
-	if (_p0.ctor === 'AppHome') {
-		return _elm_lang$html$Html$text('home');
-	} else {
-		return _elm_lang$html$Html$text(
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				'Page \"',
-				A2(_elm_lang$core$Basics_ops['++'], _p0._0, '\" not found')));
-	}
+var _awakeiningflame$awakeningflame$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				function () {
+				var _p0 = model.currentPage;
+				if (_p0.ctor === 'AppHome') {
+					return _elm_lang$html$Html$text('home');
+				} else {
+					return _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Page \"',
+							A2(_elm_lang$core$Basics_ops['++'], _p0._0, '\" not found. Redirecting...')));
+				}
+			}()
+			]));
 };
-var _awakeiningflame$awakeningflame.github.io$Main$update = F2(
-	function (action, model) {
-		var _p1 = action;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			_elm_lang$core$Native_Utils.update(
-				model,
-				{currentPage: _p1._0}),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
-	});
-var _awakeiningflame$awakeningflame.github.io$Main$Model = function (a) {
+var _awakeiningflame$awakeningflame$Main$Model = function (a) {
 	return {currentPage: a};
 };
-var _awakeiningflame$awakeningflame.github.io$Main$ChangePage = function (a) {
-	return {ctor: 'ChangePage', _0: a};
+var _awakeiningflame$awakeningflame$Main$ToPage = function (a) {
+	return {ctor: 'ToPage', _0: a};
 };
-var _awakeiningflame$awakeningflame.github.io$Main$init = function (link) {
+var _awakeiningflame$awakeningflame$Main$init = function (link) {
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
 		{currentPage: link},
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
-				_awakeiningflame$awakeningflame.github.io$Links$notFoundRedirect,
+				_awakeiningflame$awakeningflame$Links$notFoundRedirect,
 				link,
-				_awakeiningflame$awakeningflame.github.io$Main$ChangePage(_awakeiningflame$awakeningflame.github.io$Links$AppHome))
+				_awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome))
 			]));
 };
-var _awakeiningflame$awakeningflame.github.io$Main$urlUpdate = F2(
+var _awakeiningflame$awakeningflame$Main$links = {
+	toHome: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome)
+};
+var _awakeiningflame$awakeningflame$Main$ChangePage = function (a) {
+	return {ctor: 'ChangePage', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$update = F2(
+	function (action, model) {
+		var _p1 = action;
+		if (_p1.ctor === 'ChangePage') {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{currentPage: _p1._0}),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		} else {
+			var _p2 = _p1._0;
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				model,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+						_awakeiningflame$awakeningflame$Main$ChangePage(_p2)),
+						_elm_lang$navigation$Navigation$newUrl(
+						_awakeiningflame$awakeningflame$Links$printAppLinks(_p2))
+					]));
+		}
+	});
+var _awakeiningflame$awakeningflame$Main$urlUpdate = F2(
 	function (link, model) {
 		return A2(
 			_elm_lang$core$Platform_Cmd_ops['!'],
-			_elm_lang$core$Native_Utils.update(
-				model,
-				{currentPage: link}),
+			model,
 			_elm_lang$core$Native_List.fromArray(
 				[
 					A2(
-					_awakeiningflame$awakeningflame.github.io$Links$notFoundRedirect,
+					_awakeiningflame$awakeningflame$Links$notFoundRedirect,
 					link,
-					_awakeiningflame$awakeningflame.github.io$Main$ChangePage(_awakeiningflame$awakeningflame.github.io$Links$AppHome))
+					_awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome)),
+					_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+					_awakeiningflame$awakeningflame$Main$ChangePage(link))
 				]));
 	});
-var _awakeiningflame$awakeningflame.github.io$Main$main = {
+var _awakeiningflame$awakeningflame$Main$main = {
 	main: A2(
 		_elm_lang$navigation$Navigation$program,
-		_awakeiningflame$awakeningflame.github.io$Main$urlParser,
-		{init: _awakeiningflame$awakeningflame.github.io$Main$init, update: _awakeiningflame$awakeningflame.github.io$Main$update, view: _awakeiningflame$awakeningflame.github.io$Main$view, subscriptions: _awakeiningflame$awakeningflame.github.io$Main$subscriptions, urlUpdate: _awakeiningflame$awakeningflame.github.io$Main$urlUpdate})
-};
-var _awakeiningflame$awakeningflame.github.io$Main$links = {
-	toHome: _awakeiningflame$awakeningflame.github.io$Main$ChangePage(_awakeiningflame$awakeningflame.github.io$Links$AppHome)
+		_awakeiningflame$awakeningflame$Main$urlParser,
+		{init: _awakeiningflame$awakeningflame$Main$init, update: _awakeiningflame$awakeningflame$Main$update, view: _awakeiningflame$awakeningflame$Main$view, subscriptions: _awakeiningflame$awakeningflame$Main$subscriptions, urlUpdate: _awakeiningflame$awakeningflame$Main$urlUpdate})
 };
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['Main'], 'Main', typeof _awakeiningflame$awakeningflame.github.io$Main$main === 'undefined' ? null : _awakeiningflame$awakeningflame.github.io$Main$main);
+_elm_lang$core$Native_Platform.addPublicModule(Elm['Main'], 'Main', typeof _awakeiningflame$awakeningflame$Main$main === 'undefined' ? null : _awakeiningflame$awakeningflame$Main$main);
 
 if (typeof define === "function" && define['amd'])
 {
