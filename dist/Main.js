@@ -9312,7 +9312,8 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 								_elm_lang$html$Html_Attributes$style(
 								_elm_lang$core$Native_List.fromArray(
 									[
-										{ctor: '_Tuple2', _0: 'background', _1: 'rgba(255,255,255,0.8)'}
+										{ctor: '_Tuple2', _0: 'background', _1: 'rgba(255,255,255,0.8)'},
+										{ctor: '_Tuple2', _0: 'border-radius', _1: '0.5rem'}
 									]))
 							]),
 						_awakeiningflame$awakeningflame$Main$viewCurrentPage(model))

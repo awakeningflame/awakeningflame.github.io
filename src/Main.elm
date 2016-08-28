@@ -64,6 +64,7 @@ view model =
           ] -- pusher
         [ div [ class "ui grid container"
               , style [ ("background","rgba(255,255,255,0.8)")
+                      , ("border-radius","0.5rem")
                       ]
               ]
             <| viewCurrentPage model
