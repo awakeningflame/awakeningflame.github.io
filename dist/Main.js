@@ -8519,97 +8519,128 @@ var _awakeiningflame$awakeningflame$Nav$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
 };
 
-var _awakeiningflame$awakeningflame$Pages_Home$logo = A2(
-	_elm_lang$html$Html$div,
-	_elm_lang$core$Native_List.fromArray(
-		[
-			_elm_lang$html$Html_Attributes$style(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					{ctor: '_Tuple2', _0: 'background', _1: 'url(\'images/bg.jpg\')'},
-					{ctor: '_Tuple2', _0: 'padding', _1: '4rem'}
-				]))
-		]),
-	_elm_lang$core$Native_List.fromArray(
-		[
-			A2(
-			_elm_lang$html$Html$h1,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('ui inverted header')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text('Awakening Flame Accessories'),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('sub header')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text('Enkindle Your Spirit')
-						]))
-				]))
-		]));
-var _awakeiningflame$awakeningflame$Pages_Home$view = _elm_lang$core$Native_List.fromArray(
-	[
-		A2(
+var _awakeiningflame$awakeningflame$Responsive$isMobile = function (w) {
+	var _p0 = w;
+	switch (_p0.ctor) {
+		case 'Mobile':
+			return true;
+		case 'Tablet':
+			return true;
+		default:
+			return false;
+	}
+};
+var _awakeiningflame$awakeningflame$Responsive$Desktop = {ctor: 'Desktop'};
+var _awakeiningflame$awakeningflame$Responsive$Laptop = {ctor: 'Laptop'};
+var _awakeiningflame$awakeningflame$Responsive$Tablet = {ctor: 'Tablet'};
+var _awakeiningflame$awakeningflame$Responsive$Mobile = {ctor: 'Mobile'};
+var _awakeiningflame$awakeningflame$Responsive$fromWidth = function (w) {
+	return (_elm_lang$core$Native_Utils.cmp(w, 723) < 0) ? _awakeiningflame$awakeningflame$Responsive$Mobile : ((_elm_lang$core$Native_Utils.cmp(w, 933) < 0) ? _awakeiningflame$awakeningflame$Responsive$Tablet : ((_elm_lang$core$Native_Utils.cmp(w, 1127) < 0) ? _awakeiningflame$awakeningflame$Responsive$Laptop : _awakeiningflame$awakeningflame$Responsive$Desktop));
+};
+
+var _awakeiningflame$awakeningflame$Pages_Home$logo = function (config) {
+	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('one column row')
+				_elm_lang$html$Html_Attributes$style(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						{
+						ctor: '_Tuple2',
+						_0: 'background',
+						_1: _awakeiningflame$awakeningflame$Responsive$isMobile(config.windowSize) ? 'linear-gradient(135deg, #271e3f 0%,#2c3277 52%,#1d005e 52%,#36174f 100%)' : 'linear-gradient(to right, rgba(39,30,63,0.5) 0%,rgba(109,40,99,0.2) 50%,rgba(0,0,0,0) 100%), url(\'images/bg.jpg\') no-repeat'
+					},
+						{ctor: '_Tuple2', _0: 'padding', _1: '4rem'}
+					])),
+				_elm_lang$html$Html_Attributes$id('logo')
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$h1,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('column')
+						_elm_lang$html$Html_Attributes$class('ui inverted header')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_awakeiningflame$awakeningflame$Pages_Home$logo,
+						_elm_lang$html$Html$text('Awakening Flame Accessories'),
 						A2(
-						_elm_lang$html$Html$img,
+						_elm_lang$html$Html$div,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('ui medium rounded left floated image'),
-								_elm_lang$html$Html_Attributes$src('images/kevin.jpg')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[])),
-						A2(
-						_elm_lang$html$Html$h2,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('ui header')
+								_elm_lang$html$Html_Attributes$class('sub header')
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('About Kevin')
-							])),
-						A2(
-						_elm_lang$html$Html$p,
-						_elm_lang$core$Native_List.fromArray(
-							[]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('Kevin\'s a badass slayer-pimp with fuckin\' dope shit constantly CONSTANTLY GODDAMNIT')
-							])),
-						A2(
-						_elm_lang$html$Html$p,
-						_elm_lang$core$Native_List.fromArray(
-							[]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!')
+								_elm_lang$html$Html$text('Enhance Your Spirit')
 							]))
 					]))
-			]))
-	]);
+			]));
+};
+var _awakeiningflame$awakeningflame$Pages_Home$view = function (config) {
+	return _elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('one column row')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('column')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_awakeiningflame$awakeningflame$Pages_Home$logo(config),
+							A2(
+							_elm_lang$html$Html$img,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('ui medium rounded left floated image'),
+									_elm_lang$html$Html_Attributes$src('images/kevin.jpg')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[])),
+							A2(
+							_elm_lang$html$Html$h2,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('ui header')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text('About Kevin')
+								])),
+							A2(
+							_elm_lang$html$Html$p,
+							_elm_lang$core$Native_List.fromArray(
+								[]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text('Kevin\'s a badass slayer-pimp with fuckin\' dope shit constantly CONSTANTLY GODDAMNIT')
+								])),
+							A2(
+							_elm_lang$html$Html$p,
+							_elm_lang$core$Native_List.fromArray(
+								[]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text('I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!')
+								]))
+						]))
+				]))
+		]);
+};
+var _awakeiningflame$awakeningflame$Pages_Home$Config = function (a) {
+	return {windowSize: a};
+};
 
 var _awakeiningflame$awakeningflame$Pages_Gallery$view = _elm_lang$core$Native_List.fromArray(
 	[
@@ -9284,18 +9315,138 @@ var _elm_lang$navigation$Navigation$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Navigation'] = {pkg: 'elm-lang/navigation', init: _elm_lang$navigation$Navigation$init, onEffects: _elm_lang$navigation$Navigation$onEffects, onSelfMsg: _elm_lang$navigation$Navigation$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$navigation$Navigation$cmdMap, subMap: _elm_lang$navigation$Navigation$subMap};
 
+var _elm_lang$window$Native_Window = function()
+{
+
+var size = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)	{
+	callback(_elm_lang$core$Native_Scheduler.succeed({
+		width: window.innerWidth,
+		height: window.innerHeight
+	}));
+});
+
+return {
+	size: size
+};
+
+}();
+var _elm_lang$window$Window_ops = _elm_lang$window$Window_ops || {};
+_elm_lang$window$Window_ops['&>'] = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			t1,
+			function (_p0) {
+				return t2;
+			});
+	});
+var _elm_lang$window$Window$onSelfMsg = F3(
+	function (router, dimensions, state) {
+		var _p1 = state;
+		if (_p1.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var send = function (_p2) {
+				var _p3 = _p2;
+				return A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					_p3._0(dimensions));
+			};
+			return A2(
+				_elm_lang$window$Window_ops['&>'],
+				_elm_lang$core$Task$sequence(
+					A2(_elm_lang$core$List$map, send, _p1._0.subs)),
+				_elm_lang$core$Task$succeed(state));
+		}
+	});
+var _elm_lang$window$Window$init = _elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing);
+var _elm_lang$window$Window$size = _elm_lang$window$Native_Window.size;
+var _elm_lang$window$Window$width = A2(
+	_elm_lang$core$Task$map,
+	function (_) {
+		return _.width;
+	},
+	_elm_lang$window$Window$size);
+var _elm_lang$window$Window$height = A2(
+	_elm_lang$core$Task$map,
+	function (_) {
+		return _.height;
+	},
+	_elm_lang$window$Window$size);
+var _elm_lang$window$Window$onEffects = F3(
+	function (router, newSubs, oldState) {
+		var _p4 = {ctor: '_Tuple2', _0: oldState, _1: newSubs};
+		if (_p4._0.ctor === 'Nothing') {
+			if (_p4._1.ctor === '[]') {
+				return _elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing);
+			} else {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					_elm_lang$core$Process$spawn(
+						A3(
+							_elm_lang$dom$Dom_LowLevel$onWindow,
+							'resize',
+							_elm_lang$core$Json_Decode$succeed(
+								{ctor: '_Tuple0'}),
+							function (_p5) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									_elm_lang$window$Window$size,
+									_elm_lang$core$Platform$sendToSelf(router));
+							})),
+					function (pid) {
+						return _elm_lang$core$Task$succeed(
+							_elm_lang$core$Maybe$Just(
+								{subs: newSubs, pid: pid}));
+					});
+			}
+		} else {
+			if (_p4._1.ctor === '[]') {
+				return A2(
+					_elm_lang$window$Window_ops['&>'],
+					_elm_lang$core$Process$kill(_p4._0._0.pid),
+					_elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing));
+			} else {
+				return _elm_lang$core$Task$succeed(
+					_elm_lang$core$Maybe$Just(
+						{subs: newSubs, pid: _p4._0._0.pid}));
+			}
+		}
+	});
+var _elm_lang$window$Window$subscription = _elm_lang$core$Native_Platform.leaf('Window');
+var _elm_lang$window$Window$Size = F2(
+	function (a, b) {
+		return {width: a, height: b};
+	});
+var _elm_lang$window$Window$MySub = function (a) {
+	return {ctor: 'MySub', _0: a};
+};
+var _elm_lang$window$Window$resizes = function (tagger) {
+	return _elm_lang$window$Window$subscription(
+		_elm_lang$window$Window$MySub(tagger));
+};
+var _elm_lang$window$Window$subMap = F2(
+	function (func, _p6) {
+		var _p7 = _p6;
+		return _elm_lang$window$Window$MySub(
+			function (_p8) {
+				return func(
+					_p7._0(_p8));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Window'] = {pkg: 'elm-lang/window', init: _elm_lang$window$Window$init, onEffects: _elm_lang$window$Window$onEffects, onSelfMsg: _elm_lang$window$Window$onSelfMsg, tag: 'sub', subMap: _elm_lang$window$Window$subMap};
+
 var _awakeiningflame$awakeningflame$Main$urlParser = _elm_lang$navigation$Navigation$makeParser(
 	function (loc) {
 		return _awakeiningflame$awakeningflame$Links$parseAppLinks(loc.hash);
 	});
-var _awakeiningflame$awakeningflame$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
-};
 var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
 	var _p0 = model.currentPage;
 	switch (_p0.ctor) {
 		case 'AppHome':
-			return _awakeiningflame$awakeningflame$Pages_Home$view;
+			return _awakeiningflame$awakeningflame$Pages_Home$view(
+				{windowSize: model.windowSize});
 		case 'AppGallery':
 			return _awakeiningflame$awakeningflame$Pages_Gallery$view;
 		case 'AppContact':
@@ -9304,12 +9455,22 @@ var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
 			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p0._0);
 	}
 };
-var _awakeiningflame$awakeningflame$Main$Model = F2(
-	function (a, b) {
-		return {currentPage: a, nav: b};
+var _awakeiningflame$awakeningflame$Main$Model = F3(
+	function (a, b, c) {
+		return {currentPage: a, nav: b, windowSize: c};
 	});
 var _awakeiningflame$awakeningflame$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$ChangeWindowSize = function (a) {
+	return {ctor: 'ChangeWindowSize', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$window$Window$resizes(_awakeiningflame$awakeningflame$Main$ChangeWindowSize)
+			]));
 };
 var _awakeiningflame$awakeningflame$Main$ToPage = function (a) {
 	return {ctor: 'ToPage', _0: a};
@@ -9319,14 +9480,19 @@ var _awakeiningflame$awakeningflame$Main$init = function (link) {
 		_elm_lang$core$Platform_Cmd_ops['!'],
 		{
 			currentPage: link,
-			nav: _awakeiningflame$awakeningflame$Nav$init(link)
+			nav: _awakeiningflame$awakeningflame$Nav$init(link),
+			windowSize: _awakeiningflame$awakeningflame$Responsive$Mobile
 		},
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
 				_awakeiningflame$awakeningflame$Links$notFoundRedirect,
 				link,
-				_awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome))
+				_awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome)),
+				A2(
+				_elm_lang$core$Platform_Cmd$map,
+				_awakeiningflame$awakeningflame$Main$ChangeWindowSize,
+				_awakeiningflame$awakeningflame$Cmd_Extra$performLog(_elm_lang$window$Window$size))
 			]));
 };
 var _awakeiningflame$awakeningflame$Main$links = {
@@ -9400,6 +9566,16 @@ var _awakeiningflame$awakeningflame$Main$update = F2(
 							_awakeiningflame$awakeningflame$Main$NavMsg(
 								_awakeiningflame$awakeningflame$Nav$ChangePage(_p3)))
 						]));
+			case 'ChangeWindowSize':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p2._0.width)
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			case 'ToPage':
 				var _p4 = _p2._0;
 				return A2(

@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Links exposing (AppLink (..), Links)
 import Nav
+import Responsive
 import Pages.Home     as Home
 import Pages.Gallery  as Gallery
 import Pages.Contact  as Contact
@@ -12,20 +13,23 @@ import Html.Attributes exposing (..)
 import Html.Events     exposing (..)
 import Html.App        as Html
 import Navigation
+import Window
 
-import Cmd.Extra exposing (mkCmd)
+import Cmd.Extra as Task exposing (mkCmd)
 
 
 
 type alias Model =
   { currentPage : AppLink
   , nav         : Nav.Model
+  , windowSize  : Responsive.WindowSize
   }
 
 
 type Msg
   = ChangePage AppLink -- non-effectful
   | ToPage AppLink     -- effectful
+  | ChangeWindowSize {height : Int, width : Int}
   | NavMsg Nav.Msg
 
 
@@ -33,7 +37,9 @@ init : AppLink -> (Model, Cmd Msg)
 init link =
   { currentPage = link
   , nav         = Nav.init link
+  , windowSize  = Responsive.Mobile
   } ! [ Links.notFoundRedirect link <| ToPage AppHome
+      , Cmd.map ChangeWindowSize <| Task.performLog Window.size
       ]
 
 
@@ -43,6 +49,9 @@ update action model =
     ChangePage p ->
       { model | currentPage = p
       } ! [mkCmd <| NavMsg <| Nav.ChangePage p]
+    ChangeWindowSize s ->
+      { model | windowSize = Responsive.fromWidth s.width
+      } ! []
     ToPage p ->
       model ! [ mkCmd <| ChangePage p
               , Navigation.newUrl <| Links.printAppLinks p
@@ -75,7 +84,7 @@ view model =
 viewCurrentPage : Model -> List (Html Msg)
 viewCurrentPage model =
   case model.currentPage of
-    AppHome       -> Home.view
+    AppHome       -> Home.view {windowSize = model.windowSize}
     AppGallery    -> Gallery.view
     AppContact    -> Contact.view
     AppNotFound s -> NotFound.view s
@@ -83,7 +92,9 @@ viewCurrentPage model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  Sub.batch
+    [ Window.resizes ChangeWindowSize
+    ]
 
 
 -- Url related

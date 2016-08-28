@@ -4,12 +4,19 @@ import Html            exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events     exposing (..)
 
+import Responsive
 
-view : List (Html a)
-view =
+
+type alias Config =
+  { windowSize : Responsive.WindowSize
+  }
+
+
+view : Config -> List (Html a)
+view config =
   [ div [class "one column row"]
       [ div [class "column"]
-          [ logo
+          [ logo config
           , img [ class "ui medium rounded left floated image"
                 , src "images/kevin.jpg"
                 ] []
@@ -20,15 +27,20 @@ view =
       ]
   ]
 
-logo : Html a
-logo =
-  div [ style [ ("background","url('images/bg.jpg')")
+logo : Config -> Html a
+logo config =
+  div [ style [ ( "background"
+                , if Responsive.isMobile config.windowSize
+                  then "linear-gradient(135deg, #271e3f 0%,#2c3277 52%,#1d005e 52%,#36174f 100%)"
+                  else "linear-gradient(to right, rgba(39,30,63,0.5) 0%,rgba(109,40,99,0.2) 50%,rgba(0,0,0,0) 100%), url('images/bg.jpg') no-repeat"
+                )
               , ("padding", "4rem")
               ]
+      , id "logo"
       ]
       [ h1 [class "ui inverted header"]
           [ text "Awakening Flame Accessories"
           , div [class "sub header"]
-              [text "Enkindle Your Spirit"]
+              [text "Enhance Your Spirit"]
           ]
       ]
