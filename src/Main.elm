@@ -85,7 +85,14 @@ viewCurrentPage : Model -> List (Html Msg)
 viewCurrentPage model =
   case model.currentPage of
     AppHome       -> Home.view {windowSize = model.windowSize}
-    AppGallery    -> Gallery.view
+    AppGallery _  -> Gallery.view links
+                       [ ("Steampunk Fedora"
+                         , [ ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           ]
+                         )
+                       ]
     AppContact    -> Contact.view
     AppNotFound s -> NotFound.view s
 
@@ -114,7 +121,7 @@ urlUpdate link model =
 links : Links Msg
 links =
   { toHome    = ToPage AppHome
-  , toGallery = ToPage AppGallery
+  , toGallery = ToPage << AppGallery
   , toContact = ToPage AppContact
   }
 

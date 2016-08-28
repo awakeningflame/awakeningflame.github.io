@@ -4552,7 +4552,17 @@ var _awakeiningflame$awakeningflame$Links$printAppLinks = function (l) {
 			case 'AppHome':
 				return 'home';
 			case 'AppGallery':
-				return 'gallery';
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					'gallery',
+					function () {
+						var _p3 = _p2._0;
+						if (_p3.ctor === 'Nothing') {
+							return '';
+						} else {
+							return A2(_elm_lang$core$Basics_ops['++'], ':', _p3._0);
+						}
+					}());
 			case 'AppContact':
 				return 'contact';
 			default:
@@ -4569,19 +4579,42 @@ var _awakeiningflame$awakeningflame$Links$AppNotFound = function (a) {
 	return {ctor: 'AppNotFound', _0: a};
 };
 var _awakeiningflame$awakeningflame$Links$AppContact = {ctor: 'AppContact'};
-var _awakeiningflame$awakeningflame$Links$AppGallery = {ctor: 'AppGallery'};
+var _awakeiningflame$awakeningflame$Links$AppGallery = function (a) {
+	return {ctor: 'AppGallery', _0: a};
+};
 var _awakeiningflame$awakeningflame$Links$AppHome = {ctor: 'AppHome'};
 var _awakeiningflame$awakeningflame$Links$parseAppLinks = function (s) {
 	var parse = function (s$) {
-		return _elm_lang$core$Native_Utils.eq(s$, 'home') ? _awakeiningflame$awakeningflame$Links$AppHome : (_elm_lang$core$Native_Utils.eq(s$, 'gallery') ? _awakeiningflame$awakeningflame$Links$AppGallery : (_elm_lang$core$Native_Utils.eq(s$, 'contact') ? _awakeiningflame$awakeningflame$Links$AppContact : _awakeiningflame$awakeningflame$Links$AppNotFound(s$)));
+		if (_elm_lang$core$Native_Utils.eq(s$, 'home')) {
+			return _awakeiningflame$awakeningflame$Links$AppHome;
+		} else {
+			if (A2(_elm_lang$core$String$startsWith, 'gallery', s$)) {
+				var s$$ = A2(_elm_lang$core$String$dropLeft, 7, s$);
+				var _p4 = _elm_lang$core$String$uncons(s$$);
+				if (_p4.ctor === 'Nothing') {
+					return _awakeiningflame$awakeningflame$Links$AppGallery(_elm_lang$core$Maybe$Nothing);
+				} else {
+					return (!_elm_lang$core$Native_Utils.eq(
+						_p4._0._0,
+						_elm_lang$core$Native_Utils.chr(':'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : _awakeiningflame$awakeningflame$Links$AppGallery(
+						_elm_lang$core$Maybe$Just(_p4._0._1));
+				}
+			} else {
+				if (_elm_lang$core$Native_Utils.eq(s$, 'contact')) {
+					return _awakeiningflame$awakeningflame$Links$AppContact;
+				} else {
+					return _awakeiningflame$awakeningflame$Links$AppNotFound(s$);
+				}
+			}
+		}
 	};
-	var _p3 = _elm_lang$core$String$uncons(s);
-	if (_p3.ctor === 'Nothing') {
+	var _p5 = _elm_lang$core$String$uncons(s);
+	if (_p5.ctor === 'Nothing') {
 		return _awakeiningflame$awakeningflame$Links$AppHome;
 	} else {
 		return (!_elm_lang$core$Native_Utils.eq(
-			_p3._0._0,
-			_elm_lang$core$Native_Utils.chr('#'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : parse(_p3._0._1);
+			_p5._0._0,
+			_elm_lang$core$Native_Utils.chr('#'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : parse(_p5._0._1);
 	}
 };
 
@@ -8442,7 +8475,8 @@ var _awakeiningflame$awakeningflame$Nav$view = F2(
 									}
 								}())),
 							_elm_lang$html$Html_Events$onClick(
-							_elm_lang$core$Result$Ok(links.toGallery))
+							_elm_lang$core$Result$Ok(
+								links.toGallery(_elm_lang$core$Maybe$Nothing)))
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
@@ -8642,37 +8676,153 @@ var _awakeiningflame$awakeningflame$Pages_Home$Config = function (a) {
 	return {windowSize: a};
 };
 
-var _awakeiningflame$awakeningflame$Pages_Gallery$view = _elm_lang$core$Native_List.fromArray(
-	[
-		A2(
+var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = function (urls) {
+	var viewItem = function (_p0) {
+		var _p1 = _p0;
+		return A2(
+			_elm_lang$html$Html$img,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$src(_p1._0),
+					_elm_lang$html$Html_Attributes$style(
+					_elm_lang$core$Native_List.fromArray(
+						[
+							{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'}
+						])),
+					_elm_lang$html$Html_Attributes$class('ui small rounded image'),
+					_elm_lang$html$Html_Events$onClick(_p1._1)
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	};
+	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('one column row')
+				_elm_lang$html$Html_Attributes$style(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						{ctor: '_Tuple2', _0: 'overflow-x', _1: 'auto'}
+					]))
 			]),
-		_elm_lang$core$Native_List.fromArray(
+		A2(_elm_lang$core$List$map, viewItem, urls));
+};
+
+var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
+var _elm_lang$html$Html_App$program = function (app) {
+	return _elm_lang$html$Html_App$programWithFlags(
+		_elm_lang$core$Native_Utils.update(
+			app,
+			{
+				init: function (_p0) {
+					return app.init;
+				}
+			}));
+};
+var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
+	var _p2 = _p1;
+	return _elm_lang$html$Html_App$programWithFlags(
+		{
+			init: function (_p3) {
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_p2.model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			},
+			update: F2(
+				function (msg, model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						A2(_p2.update, msg, model),
+						_elm_lang$core$Native_List.fromArray(
+							[]));
+				}),
+			view: _p2.view,
+			subscriptions: function (_p4) {
+				return _elm_lang$core$Platform_Sub$none;
+			}
+		});
+};
+var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
+
+var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
+	function (links, xs) {
+		var viewExhibit = function (_p0) {
+			var _p1 = _p0;
+			var _p2 = _p1._0;
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					function () {
+					var h = _elm_lang$core$String$concat(
+						A2(
+							_elm_lang$core$List$intersperse,
+							'-',
+							_elm_lang$core$String$words(
+								_elm_lang$core$String$toLower(_p2))));
+					return A2(
+						_elm_lang$html$Html$h2,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('ui header'),
+								_elm_lang$html$Html_Attributes$id(
+								A2(_elm_lang$core$Basics_ops['++'], 'gallery:', h)),
+								_elm_lang$html$Html_Events$onClick(
+								links.toGallery(
+									_elm_lang$core$Maybe$Just(h)))
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(_p2)
+							]));
+				}(),
+					_awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view(_p1._1),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('ui divider')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[]))
+				]);
+		};
+		return _elm_lang$core$Native_List.fromArray(
 			[
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('column')
+						_elm_lang$html$Html_Attributes$class('one column row')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
 						A2(
-						_elm_lang$html$Html$h1,
+						_elm_lang$html$Html$div,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('ui header')
+								_elm_lang$html$Html_Attributes$class('column')
 							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('Gallery')
-							]))
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Native_List.fromArray(
+								[
+									A2(
+									_elm_lang$html$Html$h1,
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html_Attributes$class('ui dividing header')
+										]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text('Gallery')
+										]))
+								]),
+							_elm_lang$core$List$concat(
+								A2(_elm_lang$core$List$map, viewExhibit, xs))))
 					]))
-			]))
-	]);
+			]);
+	});
 
 var _awakeiningflame$awakeningflame$Pages_Contact$view = _elm_lang$core$Native_List.fromArray(
 	[
@@ -8751,44 +8901,6 @@ var _awakeiningflame$awakeningflame$Pages_NotFound$view = function (s) {
 				]))
 		]);
 };
-
-var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
-var _elm_lang$html$Html_App$program = function (app) {
-	return _elm_lang$html$Html_App$programWithFlags(
-		_elm_lang$core$Native_Utils.update(
-			app,
-			{
-				init: function (_p0) {
-					return app.init;
-				}
-			}));
-};
-var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
-	var _p2 = _p1;
-	return _elm_lang$html$Html_App$programWithFlags(
-		{
-			init: function (_p3) {
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p2.model,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			},
-			update: F2(
-				function (msg, model) {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						A2(_p2.update, msg, model),
-						_elm_lang$core$Native_List.fromArray(
-							[]));
-				}),
-			view: _p2.view,
-			subscriptions: function (_p4) {
-				return _elm_lang$core$Platform_Sub$none;
-			}
-		});
-};
-var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
 var _elm_lang$dom$Native_Dom = function() {
 
@@ -9441,20 +9553,6 @@ var _awakeiningflame$awakeningflame$Main$urlParser = _elm_lang$navigation$Naviga
 	function (loc) {
 		return _awakeiningflame$awakeningflame$Links$parseAppLinks(loc.hash);
 	});
-var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
-	var _p0 = model.currentPage;
-	switch (_p0.ctor) {
-		case 'AppHome':
-			return _awakeiningflame$awakeningflame$Pages_Home$view(
-				{windowSize: model.windowSize});
-		case 'AppGallery':
-			return _awakeiningflame$awakeningflame$Pages_Gallery$view;
-		case 'AppContact':
-			return _awakeiningflame$awakeningflame$Pages_Contact$view;
-		default:
-			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p0._0);
-	}
-};
 var _awakeiningflame$awakeningflame$Main$Model = F3(
 	function (a, b, c) {
 		return {currentPage: a, nav: b, windowSize: c};
@@ -9497,8 +9595,99 @@ var _awakeiningflame$awakeningflame$Main$init = function (link) {
 };
 var _awakeiningflame$awakeningflame$Main$links = {
 	toHome: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome),
-	toGallery: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppGallery),
+	toGallery: function (_p0) {
+		return _awakeiningflame$awakeningflame$Main$ToPage(
+			_awakeiningflame$awakeningflame$Links$AppGallery(_p0));
+	},
 	toContact: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppContact)
+};
+var _awakeiningflame$awakeningflame$Main$ChangePage = function (a) {
+	return {ctor: 'ChangePage', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$update = F2(
+	function (action, model) {
+		var _p1 = action;
+		switch (_p1.ctor) {
+			case 'ChangePage':
+				var _p2 = _p1._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{currentPage: _p2}),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+							_awakeiningflame$awakeningflame$Main$NavMsg(
+								_awakeiningflame$awakeningflame$Nav$ChangePage(_p2)))
+						]));
+			case 'ChangeWindowSize':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p1._0.width)
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'ToPage':
+				var _p3 = _p1._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+							_awakeiningflame$awakeningflame$Main$ChangePage(_p3)),
+							_elm_lang$navigation$Navigation$newUrl(
+							_awakeiningflame$awakeningflame$Links$printAppLinks(_p3))
+						]));
+			default:
+				var _p4 = A2(_awakeiningflame$awakeningflame$Nav$update, _p1._0, model.nav);
+				var nav = _p4._0;
+				var eff = _p4._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{nav: nav}),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$NavMsg, eff)
+						]));
+		}
+	});
+var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
+	var _p5 = model.currentPage;
+	switch (_p5.ctor) {
+		case 'AppHome':
+			return _awakeiningflame$awakeningflame$Pages_Home$view(
+				{windowSize: model.windowSize});
+		case 'AppGallery':
+			return A2(
+				_awakeiningflame$awakeningflame$Pages_Gallery$view,
+				_awakeiningflame$awakeningflame$Main$links,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						{
+						ctor: '_Tuple2',
+						_0: 'Steampunk Fedora',
+						_1: _elm_lang$core$Native_List.fromArray(
+							[
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							}
+							])
+					}
+					]));
+		case 'AppContact':
+			return _awakeiningflame$awakeningflame$Pages_Contact$view;
+		default:
+			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p5._0);
+	}
 };
 var _awakeiningflame$awakeningflame$Main$view = function (model) {
 	return A2(
@@ -9510,11 +9699,11 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 				A2(
 				_elm_lang$html$Html_App$map,
 				function (r) {
-					var _p1 = r;
-					if (_p1.ctor === 'Err') {
-						return _awakeiningflame$awakeningflame$Main$NavMsg(_p1._0);
+					var _p6 = r;
+					if (_p6.ctor === 'Err') {
+						return _awakeiningflame$awakeningflame$Main$NavMsg(_p6._0);
 					} else {
-						return _p1._0;
+						return _p6._0;
 					}
 				},
 				A2(_awakeiningflame$awakeningflame$Nav$view, _awakeiningflame$awakeningflame$Main$links, model.nav)),
@@ -9546,63 +9735,6 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 					]))
 			]));
 };
-var _awakeiningflame$awakeningflame$Main$ChangePage = function (a) {
-	return {ctor: 'ChangePage', _0: a};
-};
-var _awakeiningflame$awakeningflame$Main$update = F2(
-	function (action, model) {
-		var _p2 = action;
-		switch (_p2.ctor) {
-			case 'ChangePage':
-				var _p3 = _p2._0;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{currentPage: _p3}),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-							_awakeiningflame$awakeningflame$Main$NavMsg(
-								_awakeiningflame$awakeningflame$Nav$ChangePage(_p3)))
-						]));
-			case 'ChangeWindowSize':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{
-							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p2._0.width)
-						}),
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			case 'ToPage':
-				var _p4 = _p2._0;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-							_awakeiningflame$awakeningflame$Main$ChangePage(_p4)),
-							_elm_lang$navigation$Navigation$newUrl(
-							_awakeiningflame$awakeningflame$Links$printAppLinks(_p4))
-						]));
-			default:
-				var _p5 = A2(_awakeiningflame$awakeningflame$Nav$update, _p2._0, model.nav);
-				var nav = _p5._0;
-				var eff = _p5._1;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{nav: nav}),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$NavMsg, eff)
-						]));
-		}
-	});
 var _awakeiningflame$awakeningflame$Main$urlUpdate = F2(
 	function (link, model) {
 		return A2(

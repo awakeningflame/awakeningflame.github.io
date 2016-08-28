@@ -42,9 +42,9 @@ view links model =
         ]
     , a [ class <| "teal item"
             ++ case model.currentPage of
-                 AppGallery -> " active"
-                 _          -> ""
-        , onClick <| Ok links.toGallery
+                 AppGallery _ -> " active"
+                 _            -> ""
+        , onClick <| Ok <| links.toGallery Nothing
         ]
         [ i [class "icon camera retro"] []
         , text "Gallery"

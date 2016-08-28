@@ -9,7 +9,7 @@ import Process
 
 type AppLink
   = AppHome
-  | AppGallery
+  | AppGallery (Maybe String)
   | AppContact
   | AppNotFound String
 
@@ -21,8 +21,14 @@ parseAppLinks s =
       parse s' =
         if s' == "home"
         then AppHome
-        else if s' == "gallery"
-        then AppGallery
+        else if String.startsWith "gallery" s'
+        then let s'' = String.dropLeft 7 s'
+             in case String.uncons s'' of
+                  Nothing -> AppGallery Nothing
+                  Just (c,h) ->
+                    if c /= ':'
+                    then AppNotFound s
+                    else AppGallery <| Just h -- header name
         else if s' == "contact"
         then AppContact
         else AppNotFound s'
@@ -40,7 +46,9 @@ printAppLinks l =
   let printed =
         case l of
           AppHome       -> "home"
-          AppGallery    -> "gallery"
+          AppGallery mH -> "gallery" ++ case mH of
+                                          Nothing -> ""
+                                          Just h  -> ":" ++ h
           AppContact    -> "contact"
           AppNotFound _ -> "not-found"
   in  "#" ++ printed
@@ -48,7 +56,7 @@ printAppLinks l =
 
 type alias Links a =
   { toHome    : a
-  , toGallery : a
+  , toGallery : Maybe String -> a
   , toContact : a
   }
 
