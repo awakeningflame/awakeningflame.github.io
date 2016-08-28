@@ -8519,6 +8519,40 @@ var _awakeiningflame$awakeningflame$Nav$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
 };
 
+var _awakeiningflame$awakeningflame$Pages_Home$logo = A2(
+	_elm_lang$html$Html$div,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html_Attributes$style(
+			_elm_lang$core$Native_List.fromArray(
+				[
+					{ctor: '_Tuple2', _0: 'background', _1: 'url(\'images/bg.jpg\')'},
+					{ctor: '_Tuple2', _0: 'padding', _1: '4rem'}
+				]))
+		]),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$h1,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('ui inverted header')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text('Awakening Flame Accessories'),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('sub header')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Enkindle Your Spirit')
+						]))
+				]))
+		]));
 var _awakeiningflame$awakeningflame$Pages_Home$view = _elm_lang$core$Native_List.fromArray(
 	[
 		A2(
@@ -8537,15 +8571,41 @@ var _awakeiningflame$awakeningflame$Pages_Home$view = _elm_lang$core$Native_List
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
+						_awakeiningflame$awakeningflame$Pages_Home$logo,
 						A2(
-						_elm_lang$html$Html$h1,
+						_elm_lang$html$Html$img,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('ui medium rounded left floated image'),
+								_elm_lang$html$Html_Attributes$src('images/kevin.jpg')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[])),
+						A2(
+						_elm_lang$html$Html$h2,
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$html$Html_Attributes$class('ui header')
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Home')
+								_elm_lang$html$Html$text('About Kevin')
+							])),
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Kevin\'s a badass slayer-pimp with fuckin\' dope shit constantly CONSTANTLY GODDAMNIT')
+							])),
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!')
 							]))
 					]))
 			]))
