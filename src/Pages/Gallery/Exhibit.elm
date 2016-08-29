@@ -14,5 +14,8 @@ view urls =
             , class "ui small rounded image"
             , onClick toView
             ] []
-  in  div [style [("overflow-x", "auto")]]
+  in  div [ style [ ("text-align", "center")
+                  , ("white-space", "nowrap")
+                  ]
+          ]
         <| List.map viewItem urls

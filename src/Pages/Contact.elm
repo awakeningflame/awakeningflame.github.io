@@ -9,7 +9,9 @@ view : List (Html a)
 view =
   [ div [class "one column row"]
       [ div [class "column"]
-          [ h1 [class "ui header"] [text "Contact"]
+          [ div [class "ui segment"]
+              [ h1 [class "ui header"] [text "Contact"]
+              ]
           ]
       ]
   ]

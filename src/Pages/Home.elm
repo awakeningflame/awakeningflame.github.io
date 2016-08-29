@@ -16,13 +16,15 @@ view : Config -> List (Html a)
 view config =
   [ div [class "one column row"]
       [ div [class "column"]
-          [ logo config
-          , img [ class "ui medium rounded left floated image"
-                , src "images/kevin.jpg"
-                ] []
-          , h2 [class "ui header"] [text "About Kevin"]
-          , p [] [text "Kevin's a badass slayer-pimp with fuckin' dope shit constantly CONSTANTLY GODDAMNIT"]
-          , p [] [text "I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!"]
+          [ div [class "ui segment"]
+              [ logo config
+              , img [ class "ui medium rounded left floated image"
+                    , src "images/kevin.jpg"
+                    ] []
+              , h2 [class "ui header"] [text "About Kevin"]
+              , p [] [text "Kevin's a badass slayer-pimp with fuckin' dope shit constantly CONSTANTLY GODDAMNIT"]
+              , p [] [text "I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!"]
+              ]
           ]
       ]
   ]

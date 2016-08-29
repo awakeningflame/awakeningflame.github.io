@@ -7,6 +7,7 @@ import Pages.Home     as Home
 import Pages.Gallery  as Gallery
 import Pages.Contact  as Contact
 import Pages.NotFound as NotFound
+import Modals.GalleryFocus as GalleryFocus
 
 import Html            exposing (..)
 import Html.Attributes exposing (..)
@@ -23,6 +24,10 @@ type alias Model =
   { currentPage : AppLink
   , nav         : Nav.Model
   , windowSize  : Responsive.WindowSize
+  , modals      : { galleryFocus : GalleryFocus.Model Msg
+                  }
+  , pages       : { gallery : Gallery.Model Msg
+                  }
   }
 
 
@@ -31,13 +36,33 @@ type Msg
   | ToPage AppLink     -- effectful
   | ChangeWindowSize {height : Int, width : Int}
   | NavMsg Nav.Msg
+  | GalleryFocusMsg (GalleryFocus.Msg Msg)
 
 
-init : AppLink -> (Model, Cmd Msg)
-init link =
+
+type alias Flags =
+  { gallery : List
+      { topic : String
+      , subtopics : List
+          { subtopic : String
+          , images   : List
+              { url  : String
+              , name : String
+              }
+          }
+      }
+  }
+
+
+init : Flags -> AppLink -> (Model, Cmd Msg)
+init flags link =
   { currentPage = link
   , nav         = Nav.init link
   , windowSize  = Responsive.Mobile
+  , modals      = { galleryFocus = GalleryFocus.init
+                  }
+  , pages       = { gallery = { gallery = Gallery.init flags.gallery }
+                  }
   } ! [ Links.notFoundRedirect link <| ToPage AppHome
       , Cmd.map ChangeWindowSize <| Task.performLog Window.size
       ]
@@ -49,16 +74,25 @@ update action model =
     ChangePage p ->
       { model | currentPage = p
       } ! [mkCmd <| NavMsg <| Nav.ChangePage p]
-    ChangeWindowSize s ->
-      { model | windowSize = Responsive.fromWidth s.width
-      } ! []
     ToPage p ->
       model ! [ mkCmd <| ChangePage p
               , Navigation.newUrl <| Links.printAppLinks p
+              , case p of
+                  AppGallery (Just (topic, Just (subtopic, Just name))) ->
+                    mkCmd <| GalleryFocusMsg <| GalleryFocus.Focus
               ]
+    ChangeWindowSize s ->
+      { model | windowSize = Responsive.fromWidth s.width
+      } ! []
     NavMsg a ->
       let (nav,eff) = Nav.update a model.nav
       in  { model | nav = nav } ! [Cmd.map NavMsg eff]
+    GalleryFocusMsg a ->
+      let (g, eff) = GalleryFocus.update a model.modals.galleryFocus
+      in  { model | modals = let m = model.modals
+                             in  { m | galleryFocus = g
+                                 }
+          } ! [Cmd.map GalleryFocusMsg eff]
 
 
 view : Model -> Html Msg
@@ -68,16 +102,14 @@ view model =
                         Err x -> NavMsg x
                         Ok  x -> x)
         <| Nav.view links model.nav
-    , div [ style [ ("padding-top", "4.5rem")
+    , div [ style [ ("padding-top", "4rem")
                   ]
           ] -- pusher
         [ div [ class "ui grid container"
-              , style [ ("background","rgba(255,255,255,0.8)")
-                      , ("border-radius","0.5rem")
-                      ]
               ]
             <| viewCurrentPage model
         ]
+    , GalleryFocus.view model.modals.galleryFocus
     ]
 
 
@@ -88,6 +120,36 @@ viewCurrentPage model =
     AppGallery _  -> Gallery.view links
                        [ ("Steampunk Fedora"
                          , [ ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
+                             , ChangePage AppContact
+                             )
+                           , ( "images/hat/1.jpg"
                              , ChangePage AppContact
                              )
                            ]

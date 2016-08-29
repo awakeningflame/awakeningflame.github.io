@@ -8702,7 +8702,8 @@ var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = function (urls)
 				_elm_lang$html$Html_Attributes$style(
 				_elm_lang$core$Native_List.fromArray(
 					[
-						{ctor: '_Tuple2', _0: 'overflow-x', _1: 'auto'}
+						{ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+						{ctor: '_Tuple2', _0: 'white-space', _1: 'nowrap'}
 					]))
 			]),
 		A2(_elm_lang$core$List$map, viewItem, urls));
@@ -9675,6 +9676,56 @@ var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
 						_0: 'Steampunk Fedora',
 						_1: _elm_lang$core$Native_List.fromArray(
 							[
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
+								{
+								ctor: '_Tuple2',
+								_0: 'images/hat/1.jpg',
+								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
+							},
 								{
 								ctor: '_Tuple2',
 								_0: 'images/hat/1.jpg',
