@@ -36,7 +36,7 @@ view links {topic,subtopic,item} xs =
             -- TODO: Make continuous thingy
   in  div [ style [ ("text-align", "center")
                   , ("white-space", "nowrap")
-                  , ("overflow-x", "hidden")
+                  , ("overflow-x", "auto")
                   ]
           ]
         <| List.map viewItem xs

@@ -9249,7 +9249,7 @@ var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = F3(
 						[
 							{ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
 							{ctor: '_Tuple2', _0: 'white-space', _1: 'nowrap'},
-							{ctor: '_Tuple2', _0: 'overflow-x', _1: 'hidden'}
+							{ctor: '_Tuple2', _0: 'overflow-x', _1: 'auto'}
 						]))
 				]),
 			A2(_elm_lang$core$List$map, viewItem, xs));
