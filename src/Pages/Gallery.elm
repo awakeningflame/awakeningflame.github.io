@@ -132,6 +132,10 @@ view links model =
                                 then " active"
                                 else ""
                          , onClick <| Err <| SetActiveTopic idx
+                         , style <|
+                             if idx == model.activeTopic
+                             then []
+                             else [("color","#fff")]
                          ] [text topic]
                    )
               <| Array.toIndexedList model.topics

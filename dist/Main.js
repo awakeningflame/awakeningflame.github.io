@@ -9530,7 +9530,13 @@ var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
 														_elm_lang$core$Native_Utils.eq(_p14, model.activeTopic) ? ' active' : '')),
 													_elm_lang$html$Html_Events$onClick(
 													_elm_lang$core$Result$Err(
-														_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic(_p14)))
+														_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic(_p14))),
+													_elm_lang$html$Html_Attributes$style(
+													_elm_lang$core$Native_Utils.eq(_p14, model.activeTopic) ? _elm_lang$core$Native_List.fromArray(
+														[]) : _elm_lang$core$Native_List.fromArray(
+														[
+															{ctor: '_Tuple2', _0: 'color', _1: '#fff'}
+														]))
 												]),
 											_elm_lang$core$Native_List.fromArray(
 												[
@@ -9560,8 +9566,8 @@ var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
 													return _elm_lang$core$Native_Utils.crashCase(
 														'Pages.Gallery',
 														{
-															start: {line: 141, column: 25},
-															end: {line: 151, column: 76}
+															start: {line: 145, column: 25},
+															end: {line: 155, column: 76}
 														},
 														_p15)('inconsistent array');
 												} else {
