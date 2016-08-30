@@ -131,7 +131,8 @@ view links model =
                              ++ if idx == model.activeTopic
                                 then " active"
                                 else ""
-                         , onClick <| Err <| SetActiveTopic idx
+                         , onClick <| Ok <| links.toGallery
+                             { topic = Just (topic, {subtopic = Nothing}) }
                          , style <|
                              if idx == model.activeTopic
                              then []
@@ -144,13 +145,18 @@ view links model =
               <| [ div [class "ui secondary pointing menu"]
                      <| case Array.get model.activeTopic model.topics of
                           Nothing -> Debug.crash "inconsistent array"
-                          Just {subtopics,activeSubtopic} ->
+                          Just {topic,subtopics,activeSubtopic} ->
                             let go (idx,{subtopic}) =
                                   a [ class <| "item"
                                         ++  if idx == activeSubtopic
                                             then " active"
                                             else ""
-                                    , onClick <| Err <| SetActiveSubTopic idx
+                                    , onClick <| Ok <| links.toGallery
+                                        { topic = Just (topic,
+                                            { subtopic = Just (subtopic,
+                                                { item = Nothing }
+                                            )}
+                                        )}
                                     ] [text subtopic]
                             in  List.map go (Array.toIndexedList subtopics)
                  ] ++ ( List.map (Html.map Ok)

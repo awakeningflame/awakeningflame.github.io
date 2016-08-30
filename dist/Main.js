@@ -9424,15 +9424,161 @@ var _awakeiningflame$awakeningflame$Pages_Gallery$viewTopic = F2(
 				A2(_elm_lang$core$Array$get, _p10._0.activeSubtopic, _p10._0.subtopics));
 		}
 	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
+	function (links, model) {
+		return _elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('one column row')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('column')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui top attached tabular menu')
+									]),
+								A2(
+									_elm_lang$core$List$map,
+									function (_p11) {
+										var _p12 = _p11;
+										var _p14 = _p12._1.topic;
+										var _p13 = _p12._0;
+										return A2(
+											_elm_lang$html$Html$a,
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_elm_lang$html$Html_Attributes$class(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'item',
+														_elm_lang$core$Native_Utils.eq(_p13, model.activeTopic) ? ' active' : '')),
+													_elm_lang$html$Html_Events$onClick(
+													_elm_lang$core$Result$Ok(
+														links.toGallery(
+															{
+																topic: _elm_lang$core$Maybe$Just(
+																	{
+																		ctor: '_Tuple2',
+																		_0: _p14,
+																		_1: {subtopic: _elm_lang$core$Maybe$Nothing}
+																	})
+															}))),
+													_elm_lang$html$Html_Attributes$style(
+													_elm_lang$core$Native_Utils.eq(_p13, model.activeTopic) ? _elm_lang$core$Native_List.fromArray(
+														[]) : _elm_lang$core$Native_List.fromArray(
+														[
+															{ctor: '_Tuple2', _0: 'color', _1: '#fff'}
+														]))
+												]),
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_elm_lang$html$Html$text(_p14)
+												]));
+									},
+									_elm_lang$core$Array$toIndexedList(model.topics))),
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui bottom attached segment')
+									]),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Native_List.fromArray(
+										[
+											A2(
+											_elm_lang$html$Html$div,
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_elm_lang$html$Html_Attributes$class('ui secondary pointing menu')
+												]),
+											function () {
+												var _p15 = A2(_elm_lang$core$Array$get, model.activeTopic, model.topics);
+												if (_p15.ctor === 'Nothing') {
+													return _elm_lang$core$Native_Utils.crashCase(
+														'Pages.Gallery',
+														{
+															start: {line: 146, column: 25},
+															end: {line: 161, column: 76}
+														},
+														_p15)('inconsistent array');
+												} else {
+													var go = function (_p17) {
+														var _p18 = _p17;
+														var _p19 = _p18._1.subtopic;
+														return A2(
+															_elm_lang$html$Html$a,
+															_elm_lang$core$Native_List.fromArray(
+																[
+																	_elm_lang$html$Html_Attributes$class(
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		'item',
+																		_elm_lang$core$Native_Utils.eq(_p18._0, _p15._0.activeSubtopic) ? ' active' : '')),
+																	_elm_lang$html$Html_Events$onClick(
+																	_elm_lang$core$Result$Ok(
+																		links.toGallery(
+																			{
+																				topic: _elm_lang$core$Maybe$Just(
+																					{
+																						ctor: '_Tuple2',
+																						_0: _p15._0.topic,
+																						_1: {
+																							subtopic: _elm_lang$core$Maybe$Just(
+																								{
+																									ctor: '_Tuple2',
+																									_0: _p19,
+																									_1: {item: _elm_lang$core$Maybe$Nothing}
+																								})
+																						}
+																					})
+																			})))
+																]),
+															_elm_lang$core$Native_List.fromArray(
+																[
+																	_elm_lang$html$Html$text(_p19)
+																]));
+													};
+													return A2(
+														_elm_lang$core$List$map,
+														go,
+														_elm_lang$core$Array$toIndexedList(_p15._0.subtopics));
+												}
+											}())
+										]),
+									A2(
+										_elm_lang$core$List$map,
+										_elm_lang$html$Html_App$map(_elm_lang$core$Result$Ok),
+										A2(
+											_awakeiningflame$awakeningflame$Pages_Gallery$viewTopic,
+											links,
+											A2(_elm_lang$core$Array$get, model.activeTopic, model.topics)))))
+							]))
+					]))
+			]);
+	});
 var _awakeiningflame$awakeningflame$Pages_Gallery$update = F2(
 	function (action, model) {
-		var _p11 = action;
-		if (_p11.ctor === 'SetActiveTopic') {
+		var _p20 = action;
+		if (_p20.ctor === 'SetActiveTopic') {
 			return A2(
 				_elm_lang$core$Platform_Cmd_ops['!'],
 				_elm_lang$core$Native_Utils.update(
 					model,
-					{activeTopic: _p11._0}),
+					{activeTopic: _p20._0}),
 				_elm_lang$core$Native_List.fromArray(
 					[]));
 		} else {
@@ -9447,7 +9593,7 @@ var _awakeiningflame$awakeningflame$Pages_Gallery$update = F2(
 								function (idx, t) {
 									return _elm_lang$core$Native_Utils.eq(idx, model.activeTopic) ? _elm_lang$core$Native_Utils.update(
 										t,
-										{activeSubtopic: _p11._0}) : t;
+										{activeSubtopic: _p20._0}) : t;
 								}),
 							model.topics)
 					}),
@@ -9488,128 +9634,6 @@ var _awakeiningflame$awakeningflame$Pages_Gallery$SetActiveSubTopic = function (
 var _awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic = function (a) {
 	return {ctor: 'SetActiveTopic', _0: a};
 };
-var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
-	function (links, model) {
-		return _elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('one column row')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('column')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('ui top attached tabular menu')
-									]),
-								A2(
-									_elm_lang$core$List$map,
-									function (_p12) {
-										var _p13 = _p12;
-										var _p14 = _p13._0;
-										return A2(
-											_elm_lang$html$Html$a,
-											_elm_lang$core$Native_List.fromArray(
-												[
-													_elm_lang$html$Html_Attributes$class(
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														'item',
-														_elm_lang$core$Native_Utils.eq(_p14, model.activeTopic) ? ' active' : '')),
-													_elm_lang$html$Html_Events$onClick(
-													_elm_lang$core$Result$Err(
-														_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic(_p14))),
-													_elm_lang$html$Html_Attributes$style(
-													_elm_lang$core$Native_Utils.eq(_p14, model.activeTopic) ? _elm_lang$core$Native_List.fromArray(
-														[]) : _elm_lang$core$Native_List.fromArray(
-														[
-															{ctor: '_Tuple2', _0: 'color', _1: '#fff'}
-														]))
-												]),
-											_elm_lang$core$Native_List.fromArray(
-												[
-													_elm_lang$html$Html$text(_p13._1.topic)
-												]));
-									},
-									_elm_lang$core$Array$toIndexedList(model.topics))),
-								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('ui bottom attached segment')
-									]),
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									_elm_lang$core$Native_List.fromArray(
-										[
-											A2(
-											_elm_lang$html$Html$div,
-											_elm_lang$core$Native_List.fromArray(
-												[
-													_elm_lang$html$Html_Attributes$class('ui secondary pointing menu')
-												]),
-											function () {
-												var _p15 = A2(_elm_lang$core$Array$get, model.activeTopic, model.topics);
-												if (_p15.ctor === 'Nothing') {
-													return _elm_lang$core$Native_Utils.crashCase(
-														'Pages.Gallery',
-														{
-															start: {line: 145, column: 25},
-															end: {line: 155, column: 76}
-														},
-														_p15)('inconsistent array');
-												} else {
-													var go = function (_p17) {
-														var _p18 = _p17;
-														var _p19 = _p18._0;
-														return A2(
-															_elm_lang$html$Html$a,
-															_elm_lang$core$Native_List.fromArray(
-																[
-																	_elm_lang$html$Html_Attributes$class(
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		'item',
-																		_elm_lang$core$Native_Utils.eq(_p19, _p15._0.activeSubtopic) ? ' active' : '')),
-																	_elm_lang$html$Html_Events$onClick(
-																	_elm_lang$core$Result$Err(
-																		_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveSubTopic(_p19)))
-																]),
-															_elm_lang$core$Native_List.fromArray(
-																[
-																	_elm_lang$html$Html$text(_p18._1.subtopic)
-																]));
-													};
-													return A2(
-														_elm_lang$core$List$map,
-														go,
-														_elm_lang$core$Array$toIndexedList(_p15._0.subtopics));
-												}
-											}())
-										]),
-									A2(
-										_elm_lang$core$List$map,
-										_elm_lang$html$Html_App$map(_elm_lang$core$Result$Ok),
-										A2(
-											_awakeiningflame$awakeningflame$Pages_Gallery$viewTopic,
-											links,
-											A2(_elm_lang$core$Array$get, model.activeTopic, model.topics)))))
-							]))
-					]))
-			]);
-	});
 
 var _awakeiningflame$awakeningflame$Pages_Contact$view = _elm_lang$core$Native_List.fromArray(
 	[
@@ -10476,24 +10500,6 @@ var _awakeiningflame$awakeningflame$Main$urlParser = _elm_lang$navigation$Naviga
 	function (loc) {
 		return _awakeiningflame$awakeningflame$Links$parseAppLinks(loc.hash);
 	});
-var _awakeiningflame$awakeningflame$Main$getImageUrl = F2(
-	function (_p0, ts) {
-		var _p1 = _p0;
-		return A2(
-			_elm_lang$core$Maybe$andThen,
-			A2(_elm_lang$core$Dict$get, _p1._0, ts),
-			function (t) {
-				return A2(
-					_elm_lang$core$Maybe$andThen,
-					A2(_elm_lang$core$Dict$get, _p1._1, t),
-					function (s) {
-						return A2(
-							_elm_lang$core$Maybe$andThen,
-							A2(_elm_lang$core$Dict$get, _p1._2, s),
-							_elm_lang$core$Dict$get(_p1._3));
-					});
-			});
-	});
 var _awakeiningflame$awakeningflame$Main$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {currentPage: a, nav: b, windowSize: c, height: d, modals: e, pages: f};
@@ -10528,15 +10534,15 @@ var _awakeiningflame$awakeningflame$Main$ToPage = function (a) {
 };
 var _awakeiningflame$awakeningflame$Main$links = {
 	toHome: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome),
-	toGallery: function (_p2) {
+	toGallery: function (_p0) {
 		return _awakeiningflame$awakeningflame$Main$ToPage(
-			_awakeiningflame$awakeningflame$Links$AppGallery(_p2));
+			_awakeiningflame$awakeningflame$Links$AppGallery(_p0));
 	},
 	toContact: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppContact)
 };
 var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
-	var _p3 = model.currentPage;
-	switch (_p3.ctor) {
+	var _p1 = model.currentPage;
+	switch (_p1.ctor) {
 		case 'AppHome':
 			return _awakeiningflame$awakeningflame$Pages_Home$view(
 				{windowSize: model.windowSize});
@@ -10545,18 +10551,18 @@ var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
 				_elm_lang$core$List$map,
 				_elm_lang$html$Html_App$map(
 					function (r) {
-						var _p4 = r;
-						if (_p4.ctor === 'Err') {
-							return _awakeiningflame$awakeningflame$Main$GalleryMsg(_p4._0);
+						var _p2 = r;
+						if (_p2.ctor === 'Err') {
+							return _awakeiningflame$awakeningflame$Main$GalleryMsg(_p2._0);
 						} else {
-							return _p4._0;
+							return _p2._0;
 						}
 					}),
 				A2(_awakeiningflame$awakeningflame$Pages_Gallery$view, _awakeiningflame$awakeningflame$Main$links, model.pages.gallery));
 		case 'AppContact':
 			return _awakeiningflame$awakeningflame$Pages_Contact$view;
 		default:
-			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p3._0);
+			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p1._0);
 	}
 };
 var _awakeiningflame$awakeningflame$Main$view = function (model) {
@@ -10569,11 +10575,11 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 				A2(
 				_elm_lang$html$Html_App$map,
 				function (r) {
-					var _p5 = r;
-					if (_p5.ctor === 'Err') {
-						return _awakeiningflame$awakeningflame$Main$NavMsg(_p5._0);
+					var _p3 = r;
+					if (_p3.ctor === 'Err') {
+						return _awakeiningflame$awakeningflame$Main$NavMsg(_p3._0);
 					} else {
-						return _p5._0;
+						return _p3._0;
 					}
 				},
 				A2(_awakeiningflame$awakeningflame$Nav$view, _awakeiningflame$awakeningflame$Main$links, model.nav)),
@@ -10608,8 +10614,8 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 								_elm_lang$core$Basics_ops['++'],
 								'ui dimmer modals page transition',
 								function () {
-									var _p6 = model.modals.galleryFocus.focus;
-									if (_p6.ctor === 'Nothing') {
+									var _p4 = model.modals.galleryFocus.focus;
+									if (_p4.ctor === 'Nothing') {
 										return ' hidden';
 									} else {
 										return ' visible active';
@@ -10617,14 +10623,14 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 								}()))
 						]),
 					function () {
-						var _p7 = model.modals.galleryFocus.focus;
-						if (_p7.ctor === 'Nothing') {
+						var _p5 = model.modals.galleryFocus.focus;
+						if (_p5.ctor === 'Nothing') {
 							return _elm_lang$core$Native_List.fromArray(
 								[]);
 						} else {
 							return _elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html_Events$onClick(_p7._0.onUnFocus)
+									_elm_lang$html$Html_Events$onClick(_p5._0.onUnFocus)
 								]);
 						}
 					}()),
@@ -10654,44 +10660,54 @@ var _awakeiningflame$awakeningflame$Main$init = F2(
 					gallery: _awakeiningflame$awakeningflame$Pages_Gallery$init(flags.gallery),
 					galleryTrie: _elm_lang$core$Dict$fromList(
 						A2(
-							_elm_lang$core$List$map,
-							function (t) {
-								return {
-									ctor: '_Tuple2',
-									_0: t.topic,
-									_1: _elm_lang$core$Dict$fromList(
-										A2(
-											_elm_lang$core$List$map,
-											function (s) {
-												return {
-													ctor: '_Tuple2',
-													_0: s.subtopic,
-													_1: _elm_lang$core$Dict$fromList(
-														A2(
-															_elm_lang$core$List$map,
-															function (i) {
-																return {
+							_elm_lang$core$List$indexedMap,
+							F2(
+								function (tI, t) {
+									return {
+										ctor: '_Tuple2',
+										_0: t.topic,
+										_1: {
+											ctor: '_Tuple2',
+											_0: tI,
+											_1: _elm_lang$core$Dict$fromList(
+												A2(
+													_elm_lang$core$List$indexedMap,
+													F2(
+														function (sI, s) {
+															return {
+																ctor: '_Tuple2',
+																_0: s.subtopic,
+																_1: {
 																	ctor: '_Tuple2',
-																	_0: i.item,
+																	_0: sI,
 																	_1: _elm_lang$core$Dict$fromList(
 																		A2(
 																			_elm_lang$core$List$map,
-																			function (x) {
+																			function (i) {
 																				return {
 																					ctor: '_Tuple2',
-																					_0: x.name,
-																					_1: {url: x.url}
+																					_0: i.item,
+																					_1: _elm_lang$core$Dict$fromList(
+																						A2(
+																							_elm_lang$core$List$map,
+																							function (x) {
+																								return {
+																									ctor: '_Tuple2',
+																									_0: x.name,
+																									_1: {url: x.url}
+																								};
+																							},
+																							i.images))
 																				};
 																			},
-																			i.images))
-																};
-															},
-															s.items))
-												};
-											},
-											t.subtopics))
-								};
-							},
+																			s.items))
+																}
+															};
+														}),
+													t.subtopics))
+										}
+									};
+								}),
 							flags.gallery))
 				}
 			},
@@ -10711,101 +10727,136 @@ var _awakeiningflame$awakeningflame$Main$init = F2(
 	});
 var _awakeiningflame$awakeningflame$Main$update = F2(
 	function (action, model) {
-		var _p8 = action;
-		switch (_p8.ctor) {
+		var _p6 = action;
+		switch (_p6.ctor) {
 			case 'ChangePage':
-				var _p22 = _p8._0;
+				var _p25 = _p6._0;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
-						{currentPage: _p22}),
+						{currentPage: _p25}),
 					_elm_lang$core$Native_List.fromArray(
 						[
 							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
 							_awakeiningflame$awakeningflame$Main$NavMsg(
-								_awakeiningflame$awakeningflame$Nav$ChangePage(_p22))),
+								_awakeiningflame$awakeningflame$Nav$ChangePage(_p25))),
 							function () {
 							var failPage = _awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
 								_awakeiningflame$awakeningflame$Main$ToPage(
 									_awakeiningflame$awakeningflame$Links$AppNotFound(
-										_awakeiningflame$awakeningflame$Links$printAppLinks(_p22))));
-							var _p9 = _p22;
-							if (_p9.ctor === 'AppGallery') {
-								var _p10 = _p9._0.topic;
-								if (_p10.ctor === 'Nothing') {
-									return _elm_lang$core$Platform_Cmd$none;
-								} else {
-									var _p21 = _p10._0._0;
-									var _p11 = A2(_elm_lang$core$Dict$get, _p21, model.pages.galleryTrie);
-									if (_p11.ctor === 'Nothing') {
+										_awakeiningflame$awakeningflame$Links$printAppLinks(_p25))));
+							var handleImage = F5(
+								function (topic, subtopic, item, x, name) {
+									var _p7 = A2(_elm_lang$core$Dict$get, name, x);
+									if (_p7.ctor === 'Nothing') {
 										return failPage;
 									} else {
-										var _p12 = _p10._0._1.subtopic;
-										if (_p12.ctor === 'Nothing') {
-											return _elm_lang$core$Platform_Cmd$none;
-										} else {
-											var _p20 = _p12._0._0;
-											var _p13 = A2(_elm_lang$core$Dict$get, _p20, _p11._0);
-											if (_p13.ctor === 'Nothing') {
-												return failPage;
-											} else {
-												var _p14 = _p12._0._1.item;
-												if (_p14.ctor === 'Nothing') {
-													return _elm_lang$core$Platform_Cmd$none;
-												} else {
-													var _p19 = _p14._0._0;
-													var _p15 = A2(_elm_lang$core$Dict$get, _p19, _p13._0);
-													if (_p15.ctor === 'Nothing') {
-														return failPage;
-													} else {
-														var _p16 = _p14._0._1.image;
-														if (_p16.ctor === 'Nothing') {
-															return _elm_lang$core$Platform_Cmd$none;
-														} else {
-															var _p18 = _p16._0;
-															var _p17 = A2(_elm_lang$core$Dict$get, _p18, _p15._0);
-															if (_p17.ctor === 'Nothing') {
-																return failPage;
-															} else {
-																return _awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-																	_awakeiningflame$awakeningflame$Main$GalleryFocusMsg(
-																		_awakeiningflame$awakeningflame$Modals_GalleryFocus$Focus(
-																			{
-																				url: _p17._0.url,
-																				name: _p18,
-																				onUnFocus: _awakeiningflame$awakeningflame$Main$CloseGalleryFocus(
-																					_awakeiningflame$awakeningflame$Links$AppGallery(
-																						{
-																							topic: _elm_lang$core$Maybe$Just(
+										return _awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+											_awakeiningflame$awakeningflame$Main$GalleryFocusMsg(
+												_awakeiningflame$awakeningflame$Modals_GalleryFocus$Focus(
+													{
+														url: _p7._0.url,
+														name: name,
+														onUnFocus: _awakeiningflame$awakeningflame$Main$CloseGalleryFocus(
+															_awakeiningflame$awakeningflame$Links$AppGallery(
+																{
+																	topic: _elm_lang$core$Maybe$Just(
+																		{
+																			ctor: '_Tuple2',
+																			_0: topic,
+																			_1: {
+																				subtopic: _elm_lang$core$Maybe$Just(
+																					{
+																						ctor: '_Tuple2',
+																						_0: subtopic,
+																						_1: {
+																							item: _elm_lang$core$Maybe$Just(
 																								{
 																									ctor: '_Tuple2',
-																									_0: _p21,
-																									_1: {
-																										subtopic: _elm_lang$core$Maybe$Just(
-																											{
-																												ctor: '_Tuple2',
-																												_0: _p20,
-																												_1: {
-																													item: _elm_lang$core$Maybe$Just(
-																														{
-																															ctor: '_Tuple2',
-																															_0: _p19,
-																															_1: {image: _elm_lang$core$Maybe$Nothing}
-																														})
-																												}
-																											})
-																									}
+																									_0: item,
+																									_1: {image: _elm_lang$core$Maybe$Nothing}
 																								})
-																						}))
-																			})));
-															}
-														}
-													}
-												}
-											}
+																						}
+																					})
+																			}
+																		})
+																}))
+													})));
+									}
+								});
+							var handleItem = F4(
+								function (topic, subtopic, i, _p8) {
+									var _p9 = _p8;
+									var _p12 = _p9._0;
+									var _p10 = A2(_elm_lang$core$Dict$get, _p12, i);
+									if (_p10.ctor === 'Nothing') {
+										return failPage;
+									} else {
+										var _p11 = _p9._1.image;
+										if (_p11.ctor === 'Nothing') {
+											return _elm_lang$core$Platform_Cmd$none;
+										} else {
+											return A5(handleImage, topic, subtopic, _p12, _p10._0, _p11._0);
 										}
 									}
+								});
+							var handleSubtopic = F3(
+								function (topic, s, _p13) {
+									var _p14 = _p13;
+									var _p17 = _p14._0;
+									var _p15 = A2(_elm_lang$core$Dict$get, _p17, s);
+									if (_p15.ctor === 'Nothing') {
+										return failPage;
+									} else {
+										return _elm_lang$core$Platform_Cmd$batch(
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+													_awakeiningflame$awakeningflame$Main$GalleryMsg(
+														_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveSubTopic(_p15._0._0))),
+													function () {
+													var _p16 = _p14._1.item;
+													if (_p16.ctor === 'Nothing') {
+														return _elm_lang$core$Platform_Cmd$none;
+													} else {
+														return A4(handleItem, topic, _p17, _p15._0._1, _p16._0);
+													}
+												}()
+												]));
+									}
+								});
+							var handleTopic = function (_p18) {
+								var _p19 = _p18;
+								var _p22 = _p19._0;
+								var _p20 = A2(_elm_lang$core$Dict$get, _p22, model.pages.galleryTrie);
+								if (_p20.ctor === 'Nothing') {
+									return failPage;
+								} else {
+									return _elm_lang$core$Platform_Cmd$batch(
+										_elm_lang$core$Native_List.fromArray(
+											[
+												_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+												_awakeiningflame$awakeningflame$Main$GalleryMsg(
+													_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic(_p20._0._0))),
+												function () {
+												var _p21 = _p19._1.subtopic;
+												if (_p21.ctor === 'Nothing') {
+													return _elm_lang$core$Platform_Cmd$none;
+												} else {
+													return A3(handleSubtopic, _p22, _p20._0._1, _p21._0);
+												}
+											}()
+											]));
+								}
+							};
+							var _p23 = _p25;
+							if (_p23.ctor === 'AppGallery') {
+								var _p24 = _p23._0.topic;
+								if (_p24.ctor === 'Nothing') {
+									return _elm_lang$core$Platform_Cmd$none;
+								} else {
+									return handleTopic(_p24._0);
 								}
 							} else {
 								return _elm_lang$core$Platform_Cmd$none;
@@ -10813,33 +10864,33 @@ var _awakeiningflame$awakeningflame$Main$update = F2(
 						}()
 						]));
 			case 'ToPage':
-				var _p23 = _p8._0;
+				var _p26 = _p6._0;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					model,
 					_elm_lang$core$Native_List.fromArray(
 						[
 							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-							_awakeiningflame$awakeningflame$Main$ChangePage(_p23)),
+							_awakeiningflame$awakeningflame$Main$ChangePage(_p26)),
 							_elm_lang$navigation$Navigation$newUrl(
-							_awakeiningflame$awakeningflame$Links$printAppLinks(_p23))
+							_awakeiningflame$awakeningflame$Links$printAppLinks(_p26))
 						]));
 			case 'ChangeWindowSize':
-				var _p24 = _p8._0;
+				var _p27 = _p6._0;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{
-							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p24.width),
-							height: _p24.height
+							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p27.width),
+							height: _p27.height
 						}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'NavMsg':
-				var _p25 = A2(_awakeiningflame$awakeningflame$Nav$update, _p8._0, model.nav);
-				var nav = _p25._0;
-				var eff = _p25._1;
+				var _p28 = A2(_awakeiningflame$awakeningflame$Nav$update, _p6._0, model.nav);
+				var nav = _p28._0;
+				var eff = _p28._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -10850,9 +10901,9 @@ var _awakeiningflame$awakeningflame$Main$update = F2(
 							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$NavMsg, eff)
 						]));
 			case 'GalleryFocusMsg':
-				var _p26 = A2(_awakeiningflame$awakeningflame$Modals_GalleryFocus$update, _p8._0, model.modals.galleryFocus);
-				var g = _p26._0;
-				var eff = _p26._1;
+				var _p29 = A2(_awakeiningflame$awakeningflame$Modals_GalleryFocus$update, _p6._0, model.modals.galleryFocus);
+				var g = _p29._0;
+				var eff = _p29._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -10878,12 +10929,12 @@ var _awakeiningflame$awakeningflame$Main$update = F2(
 							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
 							_awakeiningflame$awakeningflame$Main$GalleryFocusMsg(_awakeiningflame$awakeningflame$Modals_GalleryFocus$UnFocus)),
 							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-							_awakeiningflame$awakeningflame$Main$ToPage(_p8._0))
+							_awakeiningflame$awakeningflame$Main$ToPage(_p6._0))
 						]));
 			default:
-				var _p27 = A2(_awakeiningflame$awakeningflame$Pages_Gallery$update, _p8._0, model.pages.gallery);
-				var g = _p27._0;
-				var eff = _p27._1;
+				var _p30 = A2(_awakeiningflame$awakeningflame$Pages_Gallery$update, _p6._0, model.pages.gallery);
+				var g = _p30._0;
+				var eff = _p30._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(

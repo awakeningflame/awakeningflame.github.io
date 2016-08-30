@@ -22,19 +22,12 @@ import Cmd.Extra as Task exposing (mkCmd)
 
 
 type alias GalleryTrie =
-  Dict String (Dict String (Dict String (Dict String { url : String})))
+  Dict String ( Int
+              , Dict String ( Int
+                            , Dict String (Dict String { url : String})
+                            )
+              )
 
-
-getImageUrl : (String,String,String,String) -> GalleryTrie -> Maybe { url : String }
-getImageUrl (topic,subtopic,item,name) ts =
-  Dict.get topic ts
-    `Maybe.andThen`
-  (\t -> Dict.get subtopic t
-           `Maybe.andThen`
-         (\s -> Dict.get item s
-                  `Maybe.andThen` (Dict.get name)
-         )
-  )
 
 
 type alias Model =
@@ -80,23 +73,29 @@ init flags link =
   , pages       = { gallery = Gallery.init flags.gallery
                   , galleryTrie =
                       Dict.fromList <|
-                        List.map (\t ->
+                        List.indexedMap (\tI t ->
                           ( t.topic
-                          , Dict.fromList <|
-                              List.map (\s ->
-                                ( s.subtopic
-                                , Dict.fromList <|
-                                    List.map (\i ->
-                                      ( i.item
-                                      , Dict.fromList <|
-                                          List.map (\x -> (x.name, { url = x.url }))
-                                            i.images
-                                      ))
-                                      s.items
-                                ))
-                                t.subtopics
-                          ))
-                          flags.gallery
+                          , ( tI
+                            , Dict.fromList <|
+                                List.indexedMap (\sI s ->
+                                  ( s.subtopic
+                                  , ( sI
+                                    , Dict.fromList <|
+                                      List.map (\i ->
+                                        ( i.item
+                                        , Dict.fromList <|
+                                            List.map (\x -> (x.name, { url = x.url }))
+                                              i.images
+                                        )
+                                        )
+                                        s.items
+                                    )
+                                  )
+                                  )
+                                  t.subtopics
+                            )
+                          )
+                          ) flags.gallery
                   }
   } ! [ Links.notFoundRedirect link <| ToPage AppHome
       , Cmd.map ChangeWindowSize <| Task.performLog Window.size
@@ -111,42 +110,52 @@ update action model =
       { model | currentPage = p
       } ! [ mkCmd <| NavMsg <| Nav.ChangePage p
           , let failPage = mkCmd <| ToPage <| AppNotFound <| Links.printAppLinks p
+                handleTopic (topic, {subtopic}) =
+                  case Dict.get topic model.pages.galleryTrie of
+                    Nothing -> failPage
+                    Just (tI,s) ->
+                      Cmd.batch
+                        [ mkCmd <| GalleryMsg <| Gallery.SetActiveTopic tI
+                        , case subtopic of
+                            Nothing -> Cmd.none
+                            Just sub -> handleSubtopic topic s sub
+                        ]
+                handleSubtopic topic s (subtopic, { item }) =
+                  case Dict.get subtopic s of
+                    Nothing -> failPage
+                    Just (sI,i) ->
+                      Cmd.batch
+                        [ mkCmd <| GalleryMsg <| Gallery.SetActiveSubTopic sI
+                        , case item of
+                            Nothing -> Cmd.none
+                            Just ite -> handleItem topic subtopic i ite
+                        ]
+                handleItem topic subtopic i (item, { image }) =
+                  case Dict.get item i of
+                    Nothing -> failPage
+                    Just x ->
+                      case image of
+                        Nothing -> Cmd.none
+                        Just name -> handleImage topic subtopic item x name
+                handleImage topic subtopic item x name =
+                  case Dict.get name x of
+                    Nothing -> failPage
+                    Just {url} ->
+                      mkCmd <| GalleryFocusMsg <| GalleryFocus.Focus
+                        { url = url
+                        , name = name
+                        , onUnFocus = CloseGalleryFocus <|
+                            AppGallery
+                              { topic = Just (topic,
+                              { subtopic = Just (subtopic,
+                              { item = Just (item,
+                              { image = Nothing })})})}
+                        }
             in  case p of
                   AppGallery { topic } ->
                     case topic of
                       Nothing -> Cmd.none
-                      Just (topic, { subtopic }) ->
-                        case Dict.get topic model.pages.galleryTrie of
-                          Nothing -> failPage
-                          Just s ->
-                            case subtopic of
-                              Nothing -> Cmd.none
-                              Just (subtopic, { item }) ->
-                                case Dict.get subtopic s of
-                                  Nothing -> failPage
-                                  Just i ->
-                                    case item of
-                                      Nothing -> Cmd.none
-                                      Just (item, { image }) ->
-                                        case Dict.get item i of
-                                          Nothing -> failPage
-                                          Just x ->
-                                            case image of
-                                              Nothing -> Cmd.none
-                                              Just name ->
-                                                case Dict.get name x of
-                                                  Nothing -> failPage
-                                                  Just {url} ->
-                                                    mkCmd <| GalleryFocusMsg <| GalleryFocus.Focus
-                                                      { url = url
-                                                      , name = name
-                                                      , onUnFocus = CloseGalleryFocus <|
-                                                          AppGallery
-                                                            { topic = Just (topic,
-                                                            { subtopic = Just (subtopic,
-                                                            { item = Just (item,
-                                                            { image = Nothing })})})}
-                                                      }
+                      Just top -> handleTopic top
                   _ -> Cmd.none
           ]
     ToPage p ->
