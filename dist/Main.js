@@ -4530,94 +4530,6 @@ var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
 var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
 var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
 
-var _awakeiningflame$awakeningflame$Links$notFoundRedirect = F2(
-	function (link, toPage) {
-		var _p0 = link;
-		if (_p0.ctor === 'AppNotFound') {
-			return _awakeiningflame$awakeningflame$Cmd_Extra$performLog(
-				A2(
-					_elm_lang$core$Task$andThen,
-					_elm_lang$core$Process$sleep(3 * _elm_lang$core$Time$second),
-					function (_p1) {
-						return _elm_lang$core$Task$succeed(toPage);
-					}));
-		} else {
-			return _elm_lang$core$Platform_Cmd$none;
-		}
-	});
-var _awakeiningflame$awakeningflame$Links$printAppLinks = function (l) {
-	var printed = function () {
-		var _p2 = l;
-		switch (_p2.ctor) {
-			case 'AppHome':
-				return 'home';
-			case 'AppGallery':
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					'gallery',
-					function () {
-						var _p3 = _p2._0;
-						if (_p3.ctor === 'Nothing') {
-							return '';
-						} else {
-							return A2(_elm_lang$core$Basics_ops['++'], ':', _p3._0);
-						}
-					}());
-			case 'AppContact':
-				return 'contact';
-			default:
-				return 'not-found';
-		}
-	}();
-	return A2(_elm_lang$core$Basics_ops['++'], '#', printed);
-};
-var _awakeiningflame$awakeningflame$Links$Links = F3(
-	function (a, b, c) {
-		return {toHome: a, toGallery: b, toContact: c};
-	});
-var _awakeiningflame$awakeningflame$Links$AppNotFound = function (a) {
-	return {ctor: 'AppNotFound', _0: a};
-};
-var _awakeiningflame$awakeningflame$Links$AppContact = {ctor: 'AppContact'};
-var _awakeiningflame$awakeningflame$Links$AppGallery = function (a) {
-	return {ctor: 'AppGallery', _0: a};
-};
-var _awakeiningflame$awakeningflame$Links$AppHome = {ctor: 'AppHome'};
-var _awakeiningflame$awakeningflame$Links$parseAppLinks = function (s) {
-	var parse = function (s$) {
-		if (_elm_lang$core$Native_Utils.eq(s$, 'home')) {
-			return _awakeiningflame$awakeningflame$Links$AppHome;
-		} else {
-			if (A2(_elm_lang$core$String$startsWith, 'gallery', s$)) {
-				var s$$ = A2(_elm_lang$core$String$dropLeft, 7, s$);
-				var _p4 = _elm_lang$core$String$uncons(s$$);
-				if (_p4.ctor === 'Nothing') {
-					return _awakeiningflame$awakeningflame$Links$AppGallery(_elm_lang$core$Maybe$Nothing);
-				} else {
-					return (!_elm_lang$core$Native_Utils.eq(
-						_p4._0._0,
-						_elm_lang$core$Native_Utils.chr(':'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : _awakeiningflame$awakeningflame$Links$AppGallery(
-						_elm_lang$core$Maybe$Just(_p4._0._1));
-				}
-			} else {
-				if (_elm_lang$core$Native_Utils.eq(s$, 'contact')) {
-					return _awakeiningflame$awakeningflame$Links$AppContact;
-				} else {
-					return _awakeiningflame$awakeningflame$Links$AppNotFound(s$);
-				}
-			}
-		}
-	};
-	var _p5 = _elm_lang$core$String$uncons(s);
-	if (_p5.ctor === 'Nothing') {
-		return _awakeiningflame$awakeningflame$Links$AppHome;
-	} else {
-		return (!_elm_lang$core$Native_Utils.eq(
-			_p5._0._0,
-			_elm_lang$core$Native_Utils.chr('#'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : parse(_p5._0._1);
-	}
-};
-
 //import Native.List //
 
 var _elm_lang$core$Native_Array = function() {
@@ -6374,6 +6286,599 @@ var _elm_lang$core$Json_Decode$dict = function (decoder) {
 		_elm_lang$core$Json_Decode$keyValuePairs(decoder));
 };
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
+
+//import Dict, List, Maybe, Native.Scheduler //
+
+var _evancz$elm_http$Native_Http = function() {
+
+function send(settings, request)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+		var req = new XMLHttpRequest();
+
+		// start
+		if (settings.onStart.ctor === 'Just')
+		{
+			req.addEventListener('loadStart', function() {
+				var task = settings.onStart._0;
+				_elm_lang$core$Native_Scheduler.rawSpawn(task);
+			});
+		}
+
+		// progress
+		if (settings.onProgress.ctor === 'Just')
+		{
+			req.addEventListener('progress', function(event) {
+				var progress = !event.lengthComputable
+					? _elm_lang$core$Maybe$Nothing
+					: _elm_lang$core$Maybe$Just({
+						loaded: event.loaded,
+						total: event.total
+					});
+				var task = settings.onProgress._0(progress);
+				_elm_lang$core$Native_Scheduler.rawSpawn(task);
+			});
+		}
+
+		// end
+		req.addEventListener('error', function() {
+			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'RawNetworkError' }));
+		});
+
+		req.addEventListener('timeout', function() {
+			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'RawTimeout' }));
+		});
+
+		req.addEventListener('load', function() {
+			return callback(_elm_lang$core$Native_Scheduler.succeed(toResponse(req)));
+		});
+
+		req.open(request.verb, request.url, true);
+
+		// set all the headers
+		function setHeader(pair) {
+			req.setRequestHeader(pair._0, pair._1);
+		}
+		A2(_elm_lang$core$List$map, setHeader, request.headers);
+
+		// set the timeout
+		req.timeout = settings.timeout;
+
+		// enable this withCredentials thing
+		req.withCredentials = settings.withCredentials;
+
+		// ask for a specific MIME type for the response
+		if (settings.desiredResponseType.ctor === 'Just')
+		{
+			req.overrideMimeType(settings.desiredResponseType._0);
+		}
+
+		// actuall send the request
+		if(request.body.ctor === "BodyFormData")
+		{
+			req.send(request.body.formData)
+		}
+		else
+		{
+			req.send(request.body._0);
+		}
+
+		return function() {
+			req.abort();
+		};
+	});
+}
+
+
+// deal with responses
+
+function toResponse(req)
+{
+	var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
+	var response = tag === 'Blob' ? req.response : req.responseText;
+	return {
+		status: req.status,
+		statusText: req.statusText,
+		headers: parseHeaders(req.getAllResponseHeaders()),
+		url: req.responseURL,
+		value: { ctor: tag, _0: response }
+	};
+}
+
+
+function parseHeaders(rawHeaders)
+{
+	var headers = _elm_lang$core$Dict$empty;
+
+	if (!rawHeaders)
+	{
+		return headers;
+	}
+
+	var headerPairs = rawHeaders.split('\u000d\u000a');
+	for (var i = headerPairs.length; i--; )
+	{
+		var headerPair = headerPairs[i];
+		var index = headerPair.indexOf('\u003a\u0020');
+		if (index > 0)
+		{
+			var key = headerPair.substring(0, index);
+			var value = headerPair.substring(index + 2);
+
+			headers = A3(_elm_lang$core$Dict$update, key, function(oldValue) {
+				if (oldValue.ctor === 'Just')
+				{
+					return _elm_lang$core$Maybe$Just(value + ', ' + oldValue._0);
+				}
+				return _elm_lang$core$Maybe$Just(value);
+			}, headers);
+		}
+	}
+
+	return headers;
+}
+
+
+function multipart(dataList)
+{
+	var formData = new FormData();
+
+	while (dataList.ctor !== '[]')
+	{
+		var data = dataList._0;
+		if (data.ctor === 'StringData')
+		{
+			formData.append(data._0, data._1);
+		}
+		else
+		{
+			var fileName = data._1.ctor === 'Nothing'
+				? undefined
+				: data._1._0;
+			formData.append(data._0, data._2, fileName);
+		}
+		dataList = dataList._1;
+	}
+
+	return { ctor: 'BodyFormData', formData: formData };
+}
+
+
+function uriEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function uriDecode(string)
+{
+	return decodeURIComponent(string);
+}
+
+return {
+	send: F2(send),
+	multipart: multipart,
+	uriEncode: uriEncode,
+	uriDecode: uriDecode
+};
+
+}();
+
+var _evancz$elm_http$Http$send = _evancz$elm_http$Native_Http.send;
+var _evancz$elm_http$Http$defaultSettings = {timeout: 0, onStart: _elm_lang$core$Maybe$Nothing, onProgress: _elm_lang$core$Maybe$Nothing, desiredResponseType: _elm_lang$core$Maybe$Nothing, withCredentials: false};
+var _evancz$elm_http$Http$multipart = _evancz$elm_http$Native_Http.multipart;
+var _evancz$elm_http$Http$uriDecode = _evancz$elm_http$Native_Http.uriDecode;
+var _evancz$elm_http$Http$uriEncode = _evancz$elm_http$Native_Http.uriEncode;
+var _evancz$elm_http$Http$queryEscape = function (string) {
+	return A2(
+		_elm_lang$core$String$join,
+		'+',
+		A2(
+			_elm_lang$core$String$split,
+			'%20',
+			_evancz$elm_http$Http$uriEncode(string)));
+};
+var _evancz$elm_http$Http$queryPair = function (_p0) {
+	var _p1 = _p0;
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_evancz$elm_http$Http$queryEscape(_p1._0),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'=',
+			_evancz$elm_http$Http$queryEscape(_p1._1)));
+};
+var _evancz$elm_http$Http$url = F2(
+	function (baseUrl, args) {
+		var _p2 = args;
+		if (_p2.ctor === '[]') {
+			return baseUrl;
+		} else {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				baseUrl,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'?',
+					A2(
+						_elm_lang$core$String$join,
+						'&',
+						A2(_elm_lang$core$List$map, _evancz$elm_http$Http$queryPair, args))));
+		}
+	});
+var _evancz$elm_http$Http$Request = F4(
+	function (a, b, c, d) {
+		return {verb: a, headers: b, url: c, body: d};
+	});
+var _evancz$elm_http$Http$Settings = F5(
+	function (a, b, c, d, e) {
+		return {timeout: a, onStart: b, onProgress: c, desiredResponseType: d, withCredentials: e};
+	});
+var _evancz$elm_http$Http$Response = F5(
+	function (a, b, c, d, e) {
+		return {status: a, statusText: b, headers: c, url: d, value: e};
+	});
+var _evancz$elm_http$Http$TODO_implement_blob_in_another_library = {ctor: 'TODO_implement_blob_in_another_library'};
+var _evancz$elm_http$Http$TODO_implement_file_in_another_library = {ctor: 'TODO_implement_file_in_another_library'};
+var _evancz$elm_http$Http$BodyBlob = function (a) {
+	return {ctor: 'BodyBlob', _0: a};
+};
+var _evancz$elm_http$Http$BodyFormData = {ctor: 'BodyFormData'};
+var _evancz$elm_http$Http$ArrayBuffer = {ctor: 'ArrayBuffer'};
+var _evancz$elm_http$Http$BodyString = function (a) {
+	return {ctor: 'BodyString', _0: a};
+};
+var _evancz$elm_http$Http$string = _evancz$elm_http$Http$BodyString;
+var _evancz$elm_http$Http$Empty = {ctor: 'Empty'};
+var _evancz$elm_http$Http$empty = _evancz$elm_http$Http$Empty;
+var _evancz$elm_http$Http$FileData = F3(
+	function (a, b, c) {
+		return {ctor: 'FileData', _0: a, _1: b, _2: c};
+	});
+var _evancz$elm_http$Http$BlobData = F3(
+	function (a, b, c) {
+		return {ctor: 'BlobData', _0: a, _1: b, _2: c};
+	});
+var _evancz$elm_http$Http$blobData = _evancz$elm_http$Http$BlobData;
+var _evancz$elm_http$Http$StringData = F2(
+	function (a, b) {
+		return {ctor: 'StringData', _0: a, _1: b};
+	});
+var _evancz$elm_http$Http$stringData = _evancz$elm_http$Http$StringData;
+var _evancz$elm_http$Http$Blob = function (a) {
+	return {ctor: 'Blob', _0: a};
+};
+var _evancz$elm_http$Http$Text = function (a) {
+	return {ctor: 'Text', _0: a};
+};
+var _evancz$elm_http$Http$RawNetworkError = {ctor: 'RawNetworkError'};
+var _evancz$elm_http$Http$RawTimeout = {ctor: 'RawTimeout'};
+var _evancz$elm_http$Http$BadResponse = F2(
+	function (a, b) {
+		return {ctor: 'BadResponse', _0: a, _1: b};
+	});
+var _evancz$elm_http$Http$UnexpectedPayload = function (a) {
+	return {ctor: 'UnexpectedPayload', _0: a};
+};
+var _evancz$elm_http$Http$handleResponse = F2(
+	function (handle, response) {
+		if ((_elm_lang$core$Native_Utils.cmp(200, response.status) < 1) && (_elm_lang$core$Native_Utils.cmp(response.status, 300) < 0)) {
+			var _p3 = response.value;
+			if (_p3.ctor === 'Text') {
+				return handle(_p3._0);
+			} else {
+				return _elm_lang$core$Task$fail(
+					_evancz$elm_http$Http$UnexpectedPayload('Response body is a blob, expecting a string.'));
+			}
+		} else {
+			return _elm_lang$core$Task$fail(
+				A2(_evancz$elm_http$Http$BadResponse, response.status, response.statusText));
+		}
+	});
+var _evancz$elm_http$Http$NetworkError = {ctor: 'NetworkError'};
+var _evancz$elm_http$Http$Timeout = {ctor: 'Timeout'};
+var _evancz$elm_http$Http$promoteError = function (rawError) {
+	var _p4 = rawError;
+	if (_p4.ctor === 'RawTimeout') {
+		return _evancz$elm_http$Http$Timeout;
+	} else {
+		return _evancz$elm_http$Http$NetworkError;
+	}
+};
+var _evancz$elm_http$Http$getString = function (url) {
+	var request = {
+		verb: 'GET',
+		headers: _elm_lang$core$Native_List.fromArray(
+			[]),
+		url: url,
+		body: _evancz$elm_http$Http$empty
+	};
+	return A2(
+		_elm_lang$core$Task$andThen,
+		A2(
+			_elm_lang$core$Task$mapError,
+			_evancz$elm_http$Http$promoteError,
+			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request)),
+		_evancz$elm_http$Http$handleResponse(_elm_lang$core$Task$succeed));
+};
+var _evancz$elm_http$Http$fromJson = F2(
+	function (decoder, response) {
+		var decode = function (str) {
+			var _p5 = A2(_elm_lang$core$Json_Decode$decodeString, decoder, str);
+			if (_p5.ctor === 'Ok') {
+				return _elm_lang$core$Task$succeed(_p5._0);
+			} else {
+				return _elm_lang$core$Task$fail(
+					_evancz$elm_http$Http$UnexpectedPayload(_p5._0));
+			}
+		};
+		return A2(
+			_elm_lang$core$Task$andThen,
+			A2(_elm_lang$core$Task$mapError, _evancz$elm_http$Http$promoteError, response),
+			_evancz$elm_http$Http$handleResponse(decode));
+	});
+var _evancz$elm_http$Http$get = F2(
+	function (decoder, url) {
+		var request = {
+			verb: 'GET',
+			headers: _elm_lang$core$Native_List.fromArray(
+				[]),
+			url: url,
+			body: _evancz$elm_http$Http$empty
+		};
+		return A2(
+			_evancz$elm_http$Http$fromJson,
+			decoder,
+			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
+	});
+var _evancz$elm_http$Http$post = F3(
+	function (decoder, url, body) {
+		var request = {
+			verb: 'POST',
+			headers: _elm_lang$core$Native_List.fromArray(
+				[]),
+			url: url,
+			body: body
+		};
+		return A2(
+			_evancz$elm_http$Http$fromJson,
+			decoder,
+			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
+	});
+
+var _awakeiningflame$awakeningflame$Links$notFoundRedirect = F2(
+	function (link, toPage) {
+		var _p0 = link;
+		if (_p0.ctor === 'AppNotFound') {
+			return _awakeiningflame$awakeningflame$Cmd_Extra$performLog(
+				A2(
+					_elm_lang$core$Task$andThen,
+					_elm_lang$core$Process$sleep(3 * _elm_lang$core$Time$second),
+					function (_p1) {
+						return _elm_lang$core$Task$succeed(toPage);
+					}));
+		} else {
+			return _elm_lang$core$Platform_Cmd$none;
+		}
+	});
+var _awakeiningflame$awakeningflame$Links$printAppLinks = function (l) {
+	var printed = function () {
+		var _p2 = l;
+		switch (_p2.ctor) {
+			case 'AppHome':
+				return 'home';
+			case 'AppGallery':
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					'gallery',
+					function () {
+						var _p3 = _p2._0.topic;
+						if (_p3.ctor === 'Nothing') {
+							return '';
+						} else {
+							return A2(
+								_elm_lang$core$Basics_ops['++'],
+								'/',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_evancz$elm_http$Http$uriEncode(_p3._0._0),
+									function () {
+										var _p4 = _p3._0._1.subtopic;
+										if (_p4.ctor === 'Nothing') {
+											return '';
+										} else {
+											return A2(
+												_elm_lang$core$Basics_ops['++'],
+												'/',
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													_evancz$elm_http$Http$uriEncode(_p4._0._0),
+													function () {
+														var _p5 = _p4._0._1.item;
+														if (_p5.ctor === 'Nothing') {
+															return '';
+														} else {
+															return A2(
+																_elm_lang$core$Basics_ops['++'],
+																'/',
+																A2(
+																	_elm_lang$core$Basics_ops['++'],
+																	_evancz$elm_http$Http$uriEncode(_p5._0._0),
+																	function () {
+																		var _p6 = _p5._0._1.image;
+																		if (_p6.ctor === 'Nothing') {
+																			return '';
+																		} else {
+																			return A2(
+																				_elm_lang$core$Basics_ops['++'],
+																				'/',
+																				_evancz$elm_http$Http$uriEncode(_p6._0));
+																		}
+																	}()));
+														}
+													}()));
+										}
+									}()));
+						}
+					}());
+			case 'AppContact':
+				return 'contact';
+			default:
+				return 'not-found';
+		}
+	}();
+	return A2(_elm_lang$core$Basics_ops['++'], '#', printed);
+};
+var _awakeiningflame$awakeningflame$Links$GallerySub = function (a) {
+	return {topic: a};
+};
+var _awakeiningflame$awakeningflame$Links$Links = F3(
+	function (a, b, c) {
+		return {toHome: a, toGallery: b, toContact: c};
+	});
+var _awakeiningflame$awakeningflame$Links$AppNotFound = function (a) {
+	return {ctor: 'AppNotFound', _0: a};
+};
+var _awakeiningflame$awakeningflame$Links$AppContact = {ctor: 'AppContact'};
+var _awakeiningflame$awakeningflame$Links$AppGallery = function (a) {
+	return {ctor: 'AppGallery', _0: a};
+};
+var _awakeiningflame$awakeningflame$Links$AppHome = {ctor: 'AppHome'};
+var _awakeiningflame$awakeningflame$Links$parseAppLinks = function (s) {
+	var parse = function (s$) {
+		if (_elm_lang$core$Native_Utils.eq(s$, 'home')) {
+			return _awakeiningflame$awakeningflame$Links$AppHome;
+		} else {
+			if (A2(_elm_lang$core$String$startsWith, 'gallery', s$)) {
+				var s$$ = A2(_elm_lang$core$String$dropLeft, 7, s$);
+				var _p7 = _elm_lang$core$String$uncons(s$$);
+				if (_p7.ctor === 'Nothing') {
+					return _awakeiningflame$awakeningflame$Links$AppGallery(
+						{topic: _elm_lang$core$Maybe$Nothing});
+				} else {
+					if (!_elm_lang$core$Native_Utils.eq(
+						_p7._0._0,
+						_elm_lang$core$Native_Utils.chr('/'))) {
+						return _awakeiningflame$awakeningflame$Links$AppNotFound(s);
+					} else {
+						var ss = A2(
+							_elm_lang$core$List$map,
+							_evancz$elm_http$Http$uriDecode,
+							A2(_elm_lang$core$String$split, '/', _p7._0._1));
+						var _p8 = ss;
+						_v7_4:
+						do {
+							if (_p8.ctor === '::') {
+								if (_p8._1.ctor === '[]') {
+									return _awakeiningflame$awakeningflame$Links$AppGallery(
+										{
+											topic: _elm_lang$core$Maybe$Just(
+												{
+													ctor: '_Tuple2',
+													_0: _p8._0,
+													_1: {subtopic: _elm_lang$core$Maybe$Nothing}
+												})
+										});
+								} else {
+									if (_p8._1._1.ctor === '[]') {
+										return _awakeiningflame$awakeningflame$Links$AppGallery(
+											{
+												topic: _elm_lang$core$Maybe$Just(
+													{
+														ctor: '_Tuple2',
+														_0: _p8._0,
+														_1: {
+															subtopic: _elm_lang$core$Maybe$Just(
+																{
+																	ctor: '_Tuple2',
+																	_0: _p8._1._0,
+																	_1: {item: _elm_lang$core$Maybe$Nothing}
+																})
+														}
+													})
+											});
+									} else {
+										if (_p8._1._1._1.ctor === '[]') {
+											return _awakeiningflame$awakeningflame$Links$AppGallery(
+												{
+													topic: _elm_lang$core$Maybe$Just(
+														{
+															ctor: '_Tuple2',
+															_0: _p8._0,
+															_1: {
+																subtopic: _elm_lang$core$Maybe$Just(
+																	{
+																		ctor: '_Tuple2',
+																		_0: _p8._1._0,
+																		_1: {
+																			item: _elm_lang$core$Maybe$Just(
+																				{
+																					ctor: '_Tuple2',
+																					_0: _p8._1._1._0,
+																					_1: {image: _elm_lang$core$Maybe$Nothing}
+																				})
+																		}
+																	})
+															}
+														})
+												});
+										} else {
+											if (_p8._1._1._1._1.ctor === '[]') {
+												return _awakeiningflame$awakeningflame$Links$AppGallery(
+													{
+														topic: _elm_lang$core$Maybe$Just(
+															{
+																ctor: '_Tuple2',
+																_0: _p8._0,
+																_1: {
+																	subtopic: _elm_lang$core$Maybe$Just(
+																		{
+																			ctor: '_Tuple2',
+																			_0: _p8._1._0,
+																			_1: {
+																				item: _elm_lang$core$Maybe$Just(
+																					{
+																						ctor: '_Tuple2',
+																						_0: _p8._1._1._0,
+																						_1: {
+																							image: _elm_lang$core$Maybe$Just(_p8._1._1._1._0)
+																						}
+																					})
+																			}
+																		})
+																}
+															})
+													});
+											} else {
+												break _v7_4;
+											}
+										}
+									}
+								}
+							} else {
+								break _v7_4;
+							}
+						} while(false);
+						return _awakeiningflame$awakeningflame$Links$AppNotFound(s);
+					}
+				}
+			} else {
+				if (_elm_lang$core$Native_Utils.eq(s$, 'contact')) {
+					return _awakeiningflame$awakeningflame$Links$AppContact;
+				} else {
+					return _awakeiningflame$awakeningflame$Links$AppNotFound(s$);
+				}
+			}
+		}
+	};
+	var _p9 = _elm_lang$core$String$uncons(s);
+	if (_p9.ctor === 'Nothing') {
+		return _awakeiningflame$awakeningflame$Links$AppHome;
+	} else {
+		return (!_elm_lang$core$Native_Utils.eq(
+			_p9._0._0,
+			_elm_lang$core$Native_Utils.chr('#'))) ? _awakeiningflame$awakeningflame$Links$AppNotFound(s) : parse(_p9._0._1);
+	}
+};
 
 //import Native.Json //
 
@@ -8476,7 +8981,8 @@ var _awakeiningflame$awakeningflame$Nav$view = F2(
 								}())),
 							_elm_lang$html$Html_Events$onClick(
 							_elm_lang$core$Result$Ok(
-								links.toGallery(_elm_lang$core$Maybe$Nothing)))
+								links.toGallery(
+									{topic: _elm_lang$core$Maybe$Nothing})))
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
@@ -8578,14 +9084,17 @@ var _awakeiningflame$awakeningflame$Pages_Home$logo = function (config) {
 		_elm_lang$core$Native_List.fromArray(
 			[
 				_elm_lang$html$Html_Attributes$style(
-				_elm_lang$core$Native_List.fromArray(
+				_awakeiningflame$awakeningflame$Responsive$isMobile(config.windowSize) ? _elm_lang$core$Native_List.fromArray(
 					[
-						{
-						ctor: '_Tuple2',
-						_0: 'background',
-						_1: _awakeiningflame$awakeningflame$Responsive$isMobile(config.windowSize) ? 'linear-gradient(135deg, #271e3f 0%,#2c3277 52%,#1d005e 52%,#36174f 100%)' : 'linear-gradient(to right, rgba(39,30,63,0.5) 0%,rgba(109,40,99,0.2) 50%,rgba(0,0,0,0) 100%), url(\'images/bg.jpg\') no-repeat'
-					},
+						{ctor: '_Tuple2', _0: 'background', _1: 'linear-gradient(135deg, #271e3f 0%,#2c3277 52%,#1d005e 52%,#36174f 100%)'},
 						{ctor: '_Tuple2', _0: 'padding', _1: '4rem'}
+					]) : _elm_lang$core$Native_List.fromArray(
+					[
+						{ctor: '_Tuple2', _0: 'background', _1: 'url(\'images/bg.jpg\') no-repeat'},
+						{ctor: '_Tuple2', _0: 'background-size', _1: 'cover'},
+						{ctor: '_Tuple2', _0: 'padding-top', _1: '12rem'},
+						{ctor: '_Tuple2', _0: 'padding-bottom', _1: '12rem'},
+						{ctor: '_Tuple2', _0: 'padding-left', _1: '6rem'}
 					])),
 				_elm_lang$html$Html_Attributes$id('logo')
 			]),
@@ -8632,41 +9141,50 @@ var _awakeiningflame$awakeningflame$Pages_Home$view = function (config) {
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
-							_awakeiningflame$awakeningflame$Pages_Home$logo(config),
 							A2(
-							_elm_lang$html$Html$img,
+							_elm_lang$html$Html$div,
 							_elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html_Attributes$class('ui medium rounded left floated image'),
-									_elm_lang$html$Html_Attributes$src('images/kevin.jpg')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[])),
-							A2(
-							_elm_lang$html$Html$h2,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$class('ui header')
+									_elm_lang$html$Html_Attributes$class('ui clearing segment')
 								]),
 							_elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html$text('About Kevin')
-								])),
-							A2(
-							_elm_lang$html$Html$p,
-							_elm_lang$core$Native_List.fromArray(
-								[]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text('Kevin\'s a badass slayer-pimp with fuckin\' dope shit constantly CONSTANTLY GODDAMNIT')
-								])),
-							A2(
-							_elm_lang$html$Html$p,
-							_elm_lang$core$Native_List.fromArray(
-								[]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text('I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!')
+									_awakeiningflame$awakeningflame$Pages_Home$logo(config),
+									A2(
+									_elm_lang$html$Html$img,
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html_Attributes$class('ui medium rounded left floated image'),
+											_elm_lang$html$Html_Attributes$src('images/kevin.jpg')
+										]),
+									_elm_lang$core$Native_List.fromArray(
+										[])),
+									A2(
+									_elm_lang$html$Html$h2,
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html_Attributes$class('ui header')
+										]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text('About Kevin')
+										])),
+									A2(
+									_elm_lang$html$Html$p,
+									_elm_lang$core$Native_List.fromArray(
+										[]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text('Kevin\'s a badass slayer-pimp with fuckin\' dope shit constantly CONSTANTLY GODDAMNIT')
+										])),
+									A2(
+									_elm_lang$html$Html$p,
+									_elm_lang$core$Native_List.fromArray(
+										[]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text('I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!')
+										]))
 								]))
 						]))
 				]))
@@ -8676,38 +9194,66 @@ var _awakeiningflame$awakeningflame$Pages_Home$Config = function (a) {
 	return {windowSize: a};
 };
 
-var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = function (urls) {
-	var viewItem = function (_p0) {
+var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = F3(
+	function (links, _p0, xs) {
 		var _p1 = _p0;
+		var viewItem = function (_p2) {
+			var _p3 = _p2;
+			return A2(
+				_elm_lang$html$Html$img,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$src(_p3.url),
+						_elm_lang$html$Html_Attributes$style(
+						_elm_lang$core$Native_List.fromArray(
+							[
+								{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'}
+							])),
+						_elm_lang$html$Html_Attributes$class('ui small rounded image'),
+						_elm_lang$html$Html_Events$onClick(
+						links.toGallery(
+							{
+								topic: _elm_lang$core$Maybe$Just(
+									{
+										ctor: '_Tuple2',
+										_0: _p1.topic,
+										_1: {
+											subtopic: _elm_lang$core$Maybe$Just(
+												{
+													ctor: '_Tuple2',
+													_0: _p1.subtopic,
+													_1: {
+														item: _elm_lang$core$Maybe$Just(
+															{
+																ctor: '_Tuple2',
+																_0: _p1.item,
+																_1: {
+																	image: _elm_lang$core$Maybe$Just(_p3.name)
+																}
+															})
+													}
+												})
+										}
+									})
+							}))
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		};
 		return A2(
-			_elm_lang$html$Html$img,
+			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$src(_p1._0),
 					_elm_lang$html$Html_Attributes$style(
 					_elm_lang$core$Native_List.fromArray(
 						[
-							{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'}
-						])),
-					_elm_lang$html$Html_Attributes$class('ui small rounded image'),
-					_elm_lang$html$Html_Events$onClick(_p1._1)
+							{ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+							{ctor: '_Tuple2', _0: 'white-space', _1: 'nowrap'},
+							{ctor: '_Tuple2', _0: 'overflow-x', _1: 'hidden'}
+						]))
 				]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
-	};
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$style(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						{ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-						{ctor: '_Tuple2', _0: 'white-space', _1: 'nowrap'}
-					]))
-			]),
-		A2(_elm_lang$core$List$map, viewItem, urls));
-};
+			A2(_elm_lang$core$List$map, viewItem, xs));
+	});
 
 var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
 var _elm_lang$html$Html_App$program = function (app) {
@@ -8747,47 +9293,203 @@ var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
 };
 var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
-var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
-	function (links, xs) {
-		var viewExhibit = function (_p0) {
-			var _p1 = _p0;
-			var _p2 = _p1._0;
+var _awakeiningflame$awakeningflame$Pages_Gallery$mkId = function (l) {
+	var _p0 = _elm_lang$core$String$uncons(
+		_awakeiningflame$awakeningflame$Links$printAppLinks(l));
+	if (_p0.ctor === 'Nothing') {
+		return _elm_lang$core$Native_Utils.crashCase(
+			'Pages.Gallery',
+			{
+				start: {line: 73, column: 3},
+				end: {line: 78, column: 54}
+			},
+			_p0)('printing a link isn\'t a hash');
+	} else {
+		return _elm_lang$core$Native_Utils.eq(
+			_p0._0._0,
+			_elm_lang$core$Native_Utils.chr('#')) ? _p0._0._1 : _elm_lang$core$Native_Utils.crash(
+			'Pages.Gallery',
+			{
+				start: {line: 78, column: 12},
+				end: {line: 78, column: 23}
+			})('printing a link isn\'t a hash');
+	}
+};
+var _awakeiningflame$awakeningflame$Pages_Gallery$viewSubtopic = F3(
+	function (links, _p2, mX) {
+		var _p3 = _p2;
+		var _p9 = _p3.topic;
+		var _p4 = mX;
+		if (_p4.ctor === 'Nothing') {
 			return _elm_lang$core$Native_List.fromArray(
-				[
-					function () {
-					var h = _elm_lang$core$String$concat(
-						A2(
-							_elm_lang$core$List$intersperse,
-							'-',
-							_elm_lang$core$String$words(
-								_elm_lang$core$String$toLower(_p2))));
-					return A2(
-						_elm_lang$html$Html$h2,
-						_elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			var _p8 = _p4._0.subtopic;
+			return _elm_lang$core$List$concat(
+				A2(
+					_elm_lang$core$List$map,
+					function (_p5) {
+						var _p6 = _p5;
+						var _p7 = _p6.item;
+						return _elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('ui header'),
-								_elm_lang$html$Html_Attributes$id(
-								A2(_elm_lang$core$Basics_ops['++'], 'gallery:', h)),
-								_elm_lang$html$Html_Events$onClick(
-								links.toGallery(
-									_elm_lang$core$Maybe$Just(h)))
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text(_p2)
-							]));
-				}(),
-					_awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view(_p1._1),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('ui divider')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[]))
-				]);
-		};
+								A2(
+								_elm_lang$html$Html$h2,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui header'),
+										_elm_lang$html$Html_Attributes$id(
+										_awakeiningflame$awakeningflame$Pages_Gallery$mkId(
+											_awakeiningflame$awakeningflame$Links$AppGallery(
+												{
+													topic: _elm_lang$core$Maybe$Just(
+														{
+															ctor: '_Tuple2',
+															_0: _p9,
+															_1: {
+																subtopic: _elm_lang$core$Maybe$Just(
+																	{
+																		ctor: '_Tuple2',
+																		_0: _p8,
+																		_1: {
+																			item: _elm_lang$core$Maybe$Just(
+																				{
+																					ctor: '_Tuple2',
+																					_0: _p7,
+																					_1: {image: _elm_lang$core$Maybe$Nothing}
+																				})
+																		}
+																	})
+															}
+														})
+												}))),
+										_elm_lang$html$Html_Events$onClick(
+										links.toGallery(
+											{
+												topic: _elm_lang$core$Maybe$Just(
+													{
+														ctor: '_Tuple2',
+														_0: _p9,
+														_1: {
+															subtopic: _elm_lang$core$Maybe$Just(
+																{
+																	ctor: '_Tuple2',
+																	_0: _p8,
+																	_1: {
+																		item: _elm_lang$core$Maybe$Just(
+																			{
+																				ctor: '_Tuple2',
+																				_0: _p7,
+																				_1: {image: _elm_lang$core$Maybe$Nothing}
+																			})
+																	}
+																})
+														}
+													})
+											}))
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html$text(_p7)
+									])),
+								A3(
+								_awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view,
+								links,
+								{topic: _p9, subtopic: _p8, item: _p7},
+								_p6.images),
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui divider')
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[]))
+							]);
+					},
+					_p4._0.items));
+		}
+	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$viewTopic = F2(
+	function (links, mX) {
+		var _p10 = mX;
+		if (_p10.ctor === 'Nothing') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			return A3(
+				_awakeiningflame$awakeningflame$Pages_Gallery$viewSubtopic,
+				links,
+				{topic: _p10._0.topic},
+				A2(_elm_lang$core$Array$get, _p10._0.activeSubtopic, _p10._0.subtopics));
+		}
+	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$update = F2(
+	function (action, model) {
+		var _p11 = action;
+		if (_p11.ctor === 'SetActiveTopic') {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{activeTopic: _p11._0}),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		} else {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{
+						topics: A2(
+							_elm_lang$core$Array$indexedMap,
+							F2(
+								function (idx, t) {
+									return _elm_lang$core$Native_Utils.eq(idx, model.activeTopic) ? _elm_lang$core$Native_Utils.update(
+										t,
+										{activeSubtopic: _p11._0}) : t;
+								}),
+							model.topics)
+					}),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		}
+	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$init = function (xs) {
+	return {
+		topics: A2(
+			_elm_lang$core$Array$map,
+			function (x) {
+				return {
+					topic: x.topic,
+					subtopics: _elm_lang$core$Array$fromList(x.subtopics),
+					activeSubtopic: 0
+				};
+			},
+			_elm_lang$core$Array$fromList(xs)),
+		activeTopic: 0
+	};
+};
+var _awakeiningflame$awakeningflame$Pages_Gallery$Model = F2(
+	function (a, b) {
+		return {topics: a, activeTopic: b};
+	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$Topic = F3(
+	function (a, b, c) {
+		return {topic: a, subtopics: b, activeSubtopic: c};
+	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$Subtopic = F2(
+	function (a, b) {
+		return {subtopic: a, items: b};
+	});
+var _awakeiningflame$awakeningflame$Pages_Gallery$SetActiveSubTopic = function (a) {
+	return {ctor: 'SetActiveSubTopic', _0: a};
+};
+var _awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic = function (a) {
+	return {ctor: 'SetActiveTopic', _0: a};
+};
+var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
+	function (links, model) {
 		return _elm_lang$core$Native_List.fromArray(
 			[
 				A2(
@@ -8804,23 +9506,101 @@ var _awakeiningflame$awakeningflame$Pages_Gallery$view = F2(
 							[
 								_elm_lang$html$Html_Attributes$class('column')
 							]),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Native_List.fromArray(
-								[
-									A2(
-									_elm_lang$html$Html$h1,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui top attached tabular menu')
+									]),
+								A2(
+									_elm_lang$core$List$map,
+									function (_p12) {
+										var _p13 = _p12;
+										var _p14 = _p13._0;
+										return A2(
+											_elm_lang$html$Html$a,
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_elm_lang$html$Html_Attributes$class(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'item',
+														_elm_lang$core$Native_Utils.eq(_p14, model.activeTopic) ? ' active' : '')),
+													_elm_lang$html$Html_Events$onClick(
+													_elm_lang$core$Result$Err(
+														_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveTopic(_p14)))
+												]),
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_elm_lang$html$Html$text(_p13._1.topic)
+												]));
+									},
+									_elm_lang$core$Array$toIndexedList(model.topics))),
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui bottom attached segment')
+									]),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
 									_elm_lang$core$Native_List.fromArray(
 										[
-											_elm_lang$html$Html_Attributes$class('ui dividing header')
+											A2(
+											_elm_lang$html$Html$div,
+											_elm_lang$core$Native_List.fromArray(
+												[
+													_elm_lang$html$Html_Attributes$class('ui secondary pointing menu')
+												]),
+											function () {
+												var _p15 = A2(_elm_lang$core$Array$get, model.activeTopic, model.topics);
+												if (_p15.ctor === 'Nothing') {
+													return _elm_lang$core$Native_Utils.crashCase(
+														'Pages.Gallery',
+														{
+															start: {line: 141, column: 25},
+															end: {line: 151, column: 76}
+														},
+														_p15)('inconsistent array');
+												} else {
+													var go = function (_p17) {
+														var _p18 = _p17;
+														var _p19 = _p18._0;
+														return A2(
+															_elm_lang$html$Html$a,
+															_elm_lang$core$Native_List.fromArray(
+																[
+																	_elm_lang$html$Html_Attributes$class(
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		'item',
+																		_elm_lang$core$Native_Utils.eq(_p19, _p15._0.activeSubtopic) ? ' active' : '')),
+																	_elm_lang$html$Html_Events$onClick(
+																	_elm_lang$core$Result$Err(
+																		_awakeiningflame$awakeningflame$Pages_Gallery$SetActiveSubTopic(_p19)))
+																]),
+															_elm_lang$core$Native_List.fromArray(
+																[
+																	_elm_lang$html$Html$text(_p18._1.subtopic)
+																]));
+													};
+													return A2(
+														_elm_lang$core$List$map,
+														go,
+														_elm_lang$core$Array$toIndexedList(_p15._0.subtopics));
+												}
+											}())
 										]),
-									_elm_lang$core$Native_List.fromArray(
-										[
-											_elm_lang$html$Html$text('Gallery')
-										]))
-								]),
-							_elm_lang$core$List$concat(
-								A2(_elm_lang$core$List$map, viewExhibit, xs))))
+									A2(
+										_elm_lang$core$List$map,
+										_elm_lang$html$Html_App$map(_elm_lang$core$Result$Ok),
+										A2(
+											_awakeiningflame$awakeningflame$Pages_Gallery$viewTopic,
+											links,
+											A2(_elm_lang$core$Array$get, model.activeTopic, model.topics)))))
+							]))
 					]))
 			]);
 	});
@@ -8844,14 +9624,23 @@ var _awakeiningflame$awakeningflame$Pages_Contact$view = _elm_lang$core$Native_L
 				_elm_lang$core$Native_List.fromArray(
 					[
 						A2(
-						_elm_lang$html$Html$h1,
+						_elm_lang$html$Html$div,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('ui header')
+								_elm_lang$html$Html_Attributes$class('ui segment')
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Contact')
+								A2(
+								_elm_lang$html$Html$h1,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui header')
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html$text('Contact')
+									]))
 							]))
 					]))
 			]))
@@ -8877,30 +9666,157 @@ var _awakeiningflame$awakeningflame$Pages_NotFound$view = function (s) {
 					_elm_lang$core$Native_List.fromArray(
 						[
 							A2(
-							_elm_lang$html$Html$h1,
+							_elm_lang$html$Html$div,
 							_elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html_Attributes$class('ui header')
+									_elm_lang$html$Html_Attributes$class('ui segment')
 								]),
 							_elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html$text('404 - Not Found')
-								])),
-							A2(
-							_elm_lang$html$Html$p,
-							_elm_lang$core$Native_List.fromArray(
-								[]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text(
 									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'The page \"',
-										A2(_elm_lang$core$Basics_ops['++'], s, '\" was not found. Redirecting you to the homepage...')))
+									_elm_lang$html$Html$h1,
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html_Attributes$class('ui header')
+										]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text('404 - Not Found')
+										])),
+									A2(
+									_elm_lang$html$Html$p,
+									_elm_lang$core$Native_List.fromArray(
+										[]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'The page \"',
+												A2(_elm_lang$core$Basics_ops['++'], s, '\" was not found. Redirecting you to the homepage...')))
+										]))
 								]))
 						]))
 				]))
 		]);
+};
+
+var _awakeiningflame$awakeningflame$Modals_GalleryFocus$view = F2(
+	function (_p0, model) {
+		var _p1 = _p0;
+		return A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'ui scrolling fullscreen basic modal',
+						function () {
+							var _p2 = model.focus;
+							if (_p2.ctor === 'Nothing') {
+								return ' hidden';
+							} else {
+								return ' visible active';
+							}
+						}()))
+				]),
+			function () {
+				var _p3 = model.focus;
+				if (_p3.ctor === 'Nothing') {
+					return _elm_lang$core$Native_List.fromArray(
+						[]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$i,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('icon close'),
+									_elm_lang$html$Html_Events$onClick(_p3._0.onUnFocus),
+									_elm_lang$html$Html_Attributes$style(
+									_elm_lang$core$Native_List.fromArray(
+										[
+											{ctor: '_Tuple2', _0: 'color', _1: '#fff'}
+										]))
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[])),
+							A2(
+							_elm_lang$html$Html$div,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('header')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text(_p3._0.name)
+								])),
+							A2(
+							_elm_lang$html$Html$div,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('image content')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									A2(
+									_elm_lang$html$Html$img,
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html_Attributes$src(_p3._0.url),
+											_elm_lang$html$Html_Attributes$class('ui centered image'),
+											_elm_lang$html$Html_Attributes$style(
+											_elm_lang$core$Native_List.fromArray(
+												[
+													{
+													ctor: '_Tuple2',
+													_0: 'max-height',
+													_1: A2(
+														_elm_lang$core$Basics_ops['++'],
+														_elm_lang$core$Basics$toString(_p1.height - 150),
+														'px')
+												}
+												]))
+										]),
+									_elm_lang$core$Native_List.fromArray(
+										[]))
+								]))
+						]);
+				}
+			}());
+	});
+var _awakeiningflame$awakeningflame$Modals_GalleryFocus$update = F2(
+	function (action, model) {
+		var _p4 = action;
+		if (_p4.ctor === 'Focus') {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{
+						focus: _elm_lang$core$Maybe$Just(_p4._0)
+					}),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		} else {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{focus: _elm_lang$core$Maybe$Nothing}),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		}
+	});
+var _awakeiningflame$awakeningflame$Modals_GalleryFocus$init = {focus: _elm_lang$core$Maybe$Nothing};
+var _awakeiningflame$awakeningflame$Modals_GalleryFocus$Model = function (a) {
+	return {focus: a};
+};
+var _awakeiningflame$awakeningflame$Modals_GalleryFocus$UnFocus = {ctor: 'UnFocus'};
+var _awakeiningflame$awakeningflame$Modals_GalleryFocus$Focus = function (a) {
+	return {ctor: 'Focus', _0: a};
 };
 
 var _elm_lang$dom$Native_Dom = function() {
@@ -9554,10 +10470,40 @@ var _awakeiningflame$awakeningflame$Main$urlParser = _elm_lang$navigation$Naviga
 	function (loc) {
 		return _awakeiningflame$awakeningflame$Links$parseAppLinks(loc.hash);
 	});
-var _awakeiningflame$awakeningflame$Main$Model = F3(
-	function (a, b, c) {
-		return {currentPage: a, nav: b, windowSize: c};
+var _awakeiningflame$awakeningflame$Main$getImageUrl = F2(
+	function (_p0, ts) {
+		var _p1 = _p0;
+		return A2(
+			_elm_lang$core$Maybe$andThen,
+			A2(_elm_lang$core$Dict$get, _p1._0, ts),
+			function (t) {
+				return A2(
+					_elm_lang$core$Maybe$andThen,
+					A2(_elm_lang$core$Dict$get, _p1._1, t),
+					function (s) {
+						return A2(
+							_elm_lang$core$Maybe$andThen,
+							A2(_elm_lang$core$Dict$get, _p1._2, s),
+							_elm_lang$core$Dict$get(_p1._3));
+					});
+			});
 	});
+var _awakeiningflame$awakeningflame$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {currentPage: a, nav: b, windowSize: c, height: d, modals: e, pages: f};
+	});
+var _awakeiningflame$awakeningflame$Main$Flags = function (a) {
+	return {gallery: a};
+};
+var _awakeiningflame$awakeningflame$Main$GalleryMsg = function (a) {
+	return {ctor: 'GalleryMsg', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$CloseGalleryFocus = function (a) {
+	return {ctor: 'CloseGalleryFocus', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$GalleryFocusMsg = function (a) {
+	return {ctor: 'GalleryFocusMsg', _0: a};
+};
 var _awakeiningflame$awakeningflame$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
@@ -9574,170 +10520,37 @@ var _awakeiningflame$awakeningflame$Main$subscriptions = function (model) {
 var _awakeiningflame$awakeningflame$Main$ToPage = function (a) {
 	return {ctor: 'ToPage', _0: a};
 };
-var _awakeiningflame$awakeningflame$Main$init = function (link) {
-	return A2(
-		_elm_lang$core$Platform_Cmd_ops['!'],
-		{
-			currentPage: link,
-			nav: _awakeiningflame$awakeningflame$Nav$init(link),
-			windowSize: _awakeiningflame$awakeningflame$Responsive$Mobile
-		},
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_awakeiningflame$awakeningflame$Links$notFoundRedirect,
-				link,
-				_awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome)),
-				A2(
-				_elm_lang$core$Platform_Cmd$map,
-				_awakeiningflame$awakeningflame$Main$ChangeWindowSize,
-				_awakeiningflame$awakeningflame$Cmd_Extra$performLog(_elm_lang$window$Window$size))
-			]));
-};
 var _awakeiningflame$awakeningflame$Main$links = {
 	toHome: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome),
-	toGallery: function (_p0) {
+	toGallery: function (_p2) {
 		return _awakeiningflame$awakeningflame$Main$ToPage(
-			_awakeiningflame$awakeningflame$Links$AppGallery(_p0));
+			_awakeiningflame$awakeningflame$Links$AppGallery(_p2));
 	},
 	toContact: _awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppContact)
 };
-var _awakeiningflame$awakeningflame$Main$ChangePage = function (a) {
-	return {ctor: 'ChangePage', _0: a};
-};
-var _awakeiningflame$awakeningflame$Main$update = F2(
-	function (action, model) {
-		var _p1 = action;
-		switch (_p1.ctor) {
-			case 'ChangePage':
-				var _p2 = _p1._0;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{currentPage: _p2}),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-							_awakeiningflame$awakeningflame$Main$NavMsg(
-								_awakeiningflame$awakeningflame$Nav$ChangePage(_p2)))
-						]));
-			case 'ChangeWindowSize':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{
-							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p1._0.width)
-						}),
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			case 'ToPage':
-				var _p3 = _p1._0;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
-							_awakeiningflame$awakeningflame$Main$ChangePage(_p3)),
-							_elm_lang$navigation$Navigation$newUrl(
-							_awakeiningflame$awakeningflame$Links$printAppLinks(_p3))
-						]));
-			default:
-				var _p4 = A2(_awakeiningflame$awakeningflame$Nav$update, _p1._0, model.nav);
-				var nav = _p4._0;
-				var eff = _p4._1;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{nav: nav}),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$NavMsg, eff)
-						]));
-		}
-	});
 var _awakeiningflame$awakeningflame$Main$viewCurrentPage = function (model) {
-	var _p5 = model.currentPage;
-	switch (_p5.ctor) {
+	var _p3 = model.currentPage;
+	switch (_p3.ctor) {
 		case 'AppHome':
 			return _awakeiningflame$awakeningflame$Pages_Home$view(
 				{windowSize: model.windowSize});
 		case 'AppGallery':
 			return A2(
-				_awakeiningflame$awakeningflame$Pages_Gallery$view,
-				_awakeiningflame$awakeningflame$Main$links,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						{
-						ctor: '_Tuple2',
-						_0: 'Steampunk Fedora',
-						_1: _elm_lang$core$Native_List.fromArray(
-							[
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							},
-								{
-								ctor: '_Tuple2',
-								_0: 'images/hat/1.jpg',
-								_1: _awakeiningflame$awakeningflame$Main$ChangePage(_awakeiningflame$awakeningflame$Links$AppContact)
-							}
-							])
-					}
-					]));
+				_elm_lang$core$List$map,
+				_elm_lang$html$Html_App$map(
+					function (r) {
+						var _p4 = r;
+						if (_p4.ctor === 'Err') {
+							return _awakeiningflame$awakeningflame$Main$GalleryMsg(_p4._0);
+						} else {
+							return _p4._0;
+						}
+					}),
+				A2(_awakeiningflame$awakeningflame$Pages_Gallery$view, _awakeiningflame$awakeningflame$Main$links, model.pages.gallery));
 		case 'AppContact':
 			return _awakeiningflame$awakeningflame$Pages_Contact$view;
 		default:
-			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p5._0);
+			return _awakeiningflame$awakeningflame$Pages_NotFound$view(_p3._0);
 	}
 };
 var _awakeiningflame$awakeningflame$Main$view = function (model) {
@@ -9750,11 +10563,11 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 				A2(
 				_elm_lang$html$Html_App$map,
 				function (r) {
-					var _p6 = r;
-					if (_p6.ctor === 'Err') {
-						return _awakeiningflame$awakeningflame$Main$NavMsg(_p6._0);
+					var _p5 = r;
+					if (_p5.ctor === 'Err') {
+						return _awakeiningflame$awakeningflame$Main$NavMsg(_p5._0);
 					} else {
-						return _p6._0;
+						return _p5._0;
 					}
 				},
 				A2(_awakeiningflame$awakeningflame$Nav$view, _awakeiningflame$awakeningflame$Main$links, model.nav)),
@@ -9765,7 +10578,7 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 						_elm_lang$html$Html_Attributes$style(
 						_elm_lang$core$Native_List.fromArray(
 							[
-								{ctor: '_Tuple2', _0: 'padding-top', _1: '4.5rem'}
+								{ctor: '_Tuple2', _0: 'padding-top', _1: '4rem'}
 							]))
 					]),
 				_elm_lang$core$Native_List.fromArray(
@@ -9774,18 +10587,315 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 						_elm_lang$html$Html$div,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('ui grid container'),
-								_elm_lang$html$Html_Attributes$style(
-								_elm_lang$core$Native_List.fromArray(
-									[
-										{ctor: '_Tuple2', _0: 'background', _1: 'rgba(255,255,255,0.8)'},
-										{ctor: '_Tuple2', _0: 'border-radius', _1: '0.5rem'}
-									]))
+								_elm_lang$html$Html_Attributes$class('ui grid container')
 							]),
 						_awakeiningflame$awakeningflame$Main$viewCurrentPage(model))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'ui dimmer modals page transition',
+								function () {
+									var _p6 = model.modals.galleryFocus.focus;
+									if (_p6.ctor === 'Nothing') {
+										return ' hidden';
+									} else {
+										return ' visible active';
+									}
+								}()))
+						]),
+					function () {
+						var _p7 = model.modals.galleryFocus.focus;
+						if (_p7.ctor === 'Nothing') {
+							return _elm_lang$core$Native_List.fromArray(
+								[]);
+						} else {
+							return _elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Events$onClick(_p7._0.onUnFocus)
+								]);
+						}
+					}()),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_awakeiningflame$awakeningflame$Modals_GalleryFocus$view,
+						{height: model.height},
+						model.modals.galleryFocus)
 					]))
 			]));
 };
+var _awakeiningflame$awakeningflame$Main$ChangePage = function (a) {
+	return {ctor: 'ChangePage', _0: a};
+};
+var _awakeiningflame$awakeningflame$Main$init = F2(
+	function (flags, link) {
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			{
+				currentPage: link,
+				nav: _awakeiningflame$awakeningflame$Nav$init(link),
+				windowSize: _awakeiningflame$awakeningflame$Responsive$Mobile,
+				height: 0,
+				modals: {galleryFocus: _awakeiningflame$awakeningflame$Modals_GalleryFocus$init},
+				pages: {
+					gallery: _awakeiningflame$awakeningflame$Pages_Gallery$init(flags.gallery),
+					galleryTrie: _elm_lang$core$Dict$fromList(
+						A2(
+							_elm_lang$core$List$map,
+							function (t) {
+								return {
+									ctor: '_Tuple2',
+									_0: t.topic,
+									_1: _elm_lang$core$Dict$fromList(
+										A2(
+											_elm_lang$core$List$map,
+											function (s) {
+												return {
+													ctor: '_Tuple2',
+													_0: s.subtopic,
+													_1: _elm_lang$core$Dict$fromList(
+														A2(
+															_elm_lang$core$List$map,
+															function (i) {
+																return {
+																	ctor: '_Tuple2',
+																	_0: i.item,
+																	_1: _elm_lang$core$Dict$fromList(
+																		A2(
+																			_elm_lang$core$List$map,
+																			function (x) {
+																				return {
+																					ctor: '_Tuple2',
+																					_0: x.name,
+																					_1: {url: x.url}
+																				};
+																			},
+																			i.images))
+																};
+															},
+															s.items))
+												};
+											},
+											t.subtopics))
+								};
+							},
+							flags.gallery))
+				}
+			},
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_awakeiningflame$awakeningflame$Links$notFoundRedirect,
+					link,
+					_awakeiningflame$awakeningflame$Main$ToPage(_awakeiningflame$awakeningflame$Links$AppHome)),
+					A2(
+					_elm_lang$core$Platform_Cmd$map,
+					_awakeiningflame$awakeningflame$Main$ChangeWindowSize,
+					_awakeiningflame$awakeningflame$Cmd_Extra$performLog(_elm_lang$window$Window$size)),
+					_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+					_awakeiningflame$awakeningflame$Main$ChangePage(link))
+				]));
+	});
+var _awakeiningflame$awakeningflame$Main$update = F2(
+	function (action, model) {
+		var _p8 = action;
+		switch (_p8.ctor) {
+			case 'ChangePage':
+				var _p22 = _p8._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{currentPage: _p22}),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+							_awakeiningflame$awakeningflame$Main$NavMsg(
+								_awakeiningflame$awakeningflame$Nav$ChangePage(_p22))),
+							function () {
+							var failPage = _awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+								_awakeiningflame$awakeningflame$Main$ToPage(
+									_awakeiningflame$awakeningflame$Links$AppNotFound(
+										_awakeiningflame$awakeningflame$Links$printAppLinks(_p22))));
+							var _p9 = _p22;
+							if (_p9.ctor === 'AppGallery') {
+								var _p10 = _p9._0.topic;
+								if (_p10.ctor === 'Nothing') {
+									return _elm_lang$core$Platform_Cmd$none;
+								} else {
+									var _p21 = _p10._0._0;
+									var _p11 = A2(_elm_lang$core$Dict$get, _p21, model.pages.galleryTrie);
+									if (_p11.ctor === 'Nothing') {
+										return failPage;
+									} else {
+										var _p12 = _p10._0._1.subtopic;
+										if (_p12.ctor === 'Nothing') {
+											return _elm_lang$core$Platform_Cmd$none;
+										} else {
+											var _p20 = _p12._0._0;
+											var _p13 = A2(_elm_lang$core$Dict$get, _p20, _p11._0);
+											if (_p13.ctor === 'Nothing') {
+												return failPage;
+											} else {
+												var _p14 = _p12._0._1.item;
+												if (_p14.ctor === 'Nothing') {
+													return _elm_lang$core$Platform_Cmd$none;
+												} else {
+													var _p19 = _p14._0._0;
+													var _p15 = A2(_elm_lang$core$Dict$get, _p19, _p13._0);
+													if (_p15.ctor === 'Nothing') {
+														return failPage;
+													} else {
+														var _p16 = _p14._0._1.image;
+														if (_p16.ctor === 'Nothing') {
+															return _elm_lang$core$Platform_Cmd$none;
+														} else {
+															var _p18 = _p16._0;
+															var _p17 = A2(_elm_lang$core$Dict$get, _p18, _p15._0);
+															if (_p17.ctor === 'Nothing') {
+																return failPage;
+															} else {
+																return _awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+																	_awakeiningflame$awakeningflame$Main$GalleryFocusMsg(
+																		_awakeiningflame$awakeningflame$Modals_GalleryFocus$Focus(
+																			{
+																				url: _p17._0.url,
+																				name: _p18,
+																				onUnFocus: _awakeiningflame$awakeningflame$Main$CloseGalleryFocus(
+																					_awakeiningflame$awakeningflame$Links$AppGallery(
+																						{
+																							topic: _elm_lang$core$Maybe$Just(
+																								{
+																									ctor: '_Tuple2',
+																									_0: _p21,
+																									_1: {
+																										subtopic: _elm_lang$core$Maybe$Just(
+																											{
+																												ctor: '_Tuple2',
+																												_0: _p20,
+																												_1: {
+																													item: _elm_lang$core$Maybe$Just(
+																														{
+																															ctor: '_Tuple2',
+																															_0: _p19,
+																															_1: {image: _elm_lang$core$Maybe$Nothing}
+																														})
+																												}
+																											})
+																									}
+																								})
+																						}))
+																			})));
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							} else {
+								return _elm_lang$core$Platform_Cmd$none;
+							}
+						}()
+						]));
+			case 'ToPage':
+				var _p23 = _p8._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+							_awakeiningflame$awakeningflame$Main$ChangePage(_p23)),
+							_elm_lang$navigation$Navigation$newUrl(
+							_awakeiningflame$awakeningflame$Links$printAppLinks(_p23))
+						]));
+			case 'ChangeWindowSize':
+				var _p24 = _p8._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							windowSize: _awakeiningflame$awakeningflame$Responsive$fromWidth(_p24.width),
+							height: _p24.height
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'NavMsg':
+				var _p25 = A2(_awakeiningflame$awakeningflame$Nav$update, _p8._0, model.nav);
+				var nav = _p25._0;
+				var eff = _p25._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{nav: nav}),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$NavMsg, eff)
+						]));
+			case 'GalleryFocusMsg':
+				var _p26 = A2(_awakeiningflame$awakeningflame$Modals_GalleryFocus$update, _p8._0, model.modals.galleryFocus);
+				var g = _p26._0;
+				var eff = _p26._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							modals: function () {
+								var m = model.modals;
+								return _elm_lang$core$Native_Utils.update(
+									m,
+									{galleryFocus: g});
+							}()
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$GalleryFocusMsg, eff)
+						]));
+			case 'CloseGalleryFocus':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+							_awakeiningflame$awakeningflame$Main$GalleryFocusMsg(_awakeiningflame$awakeningflame$Modals_GalleryFocus$UnFocus)),
+							_awakeiningflame$awakeningflame$Cmd_Extra$mkCmd(
+							_awakeiningflame$awakeningflame$Main$ToPage(_p8._0))
+						]));
+			default:
+				var _p27 = A2(_awakeiningflame$awakeningflame$Pages_Gallery$update, _p8._0, model.pages.gallery);
+				var g = _p27._0;
+				var eff = _p27._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pages: function () {
+								var p = model.pages;
+								return _elm_lang$core$Native_Utils.update(
+									p,
+									{gallery: g});
+							}()
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(_elm_lang$core$Platform_Cmd$map, _awakeiningflame$awakeningflame$Main$GalleryMsg, eff)
+						]));
+		}
+	});
 var _awakeiningflame$awakeningflame$Main$urlUpdate = F2(
 	function (link, model) {
 		return A2(
@@ -9803,9 +10913,76 @@ var _awakeiningflame$awakeningflame$Main$urlUpdate = F2(
 	});
 var _awakeiningflame$awakeningflame$Main$main = {
 	main: A2(
-		_elm_lang$navigation$Navigation$program,
+		_elm_lang$navigation$Navigation$programWithFlags,
 		_awakeiningflame$awakeningflame$Main$urlParser,
-		{init: _awakeiningflame$awakeningflame$Main$init, update: _awakeiningflame$awakeningflame$Main$update, view: _awakeiningflame$awakeningflame$Main$view, subscriptions: _awakeiningflame$awakeningflame$Main$subscriptions, urlUpdate: _awakeiningflame$awakeningflame$Main$urlUpdate})
+		{init: _awakeiningflame$awakeningflame$Main$init, update: _awakeiningflame$awakeningflame$Main$update, view: _awakeiningflame$awakeningflame$Main$view, subscriptions: _awakeiningflame$awakeningflame$Main$subscriptions, urlUpdate: _awakeiningflame$awakeningflame$Main$urlUpdate}),
+	flags: A2(
+		_elm_lang$core$Json_Decode$andThen,
+		A2(
+			_elm_lang$core$Json_Decode_ops[':='],
+			'gallery',
+			_elm_lang$core$Json_Decode$list(
+				A2(
+					_elm_lang$core$Json_Decode$andThen,
+					A2(
+						_elm_lang$core$Json_Decode_ops[':='],
+						'subtopics',
+						_elm_lang$core$Json_Decode$list(
+							A2(
+								_elm_lang$core$Json_Decode$andThen,
+								A2(
+									_elm_lang$core$Json_Decode_ops[':='],
+									'items',
+									_elm_lang$core$Json_Decode$list(
+										A2(
+											_elm_lang$core$Json_Decode$andThen,
+											A2(
+												_elm_lang$core$Json_Decode_ops[':='],
+												'images',
+												_elm_lang$core$Json_Decode$list(
+													A2(
+														_elm_lang$core$Json_Decode$andThen,
+														A2(_elm_lang$core$Json_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string),
+														function (name) {
+															return A2(
+																_elm_lang$core$Json_Decode$andThen,
+																A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string),
+																function (url) {
+																	return _elm_lang$core$Json_Decode$succeed(
+																		{name: name, url: url});
+																});
+														}))),
+											function (images) {
+												return A2(
+													_elm_lang$core$Json_Decode$andThen,
+													A2(_elm_lang$core$Json_Decode_ops[':='], 'item', _elm_lang$core$Json_Decode$string),
+													function (item) {
+														return _elm_lang$core$Json_Decode$succeed(
+															{images: images, item: item});
+													});
+											}))),
+								function (items) {
+									return A2(
+										_elm_lang$core$Json_Decode$andThen,
+										A2(_elm_lang$core$Json_Decode_ops[':='], 'subtopic', _elm_lang$core$Json_Decode$string),
+										function (subtopic) {
+											return _elm_lang$core$Json_Decode$succeed(
+												{items: items, subtopic: subtopic});
+										});
+								}))),
+					function (subtopics) {
+						return A2(
+							_elm_lang$core$Json_Decode$andThen,
+							A2(_elm_lang$core$Json_Decode_ops[':='], 'topic', _elm_lang$core$Json_Decode$string),
+							function (topic) {
+								return _elm_lang$core$Json_Decode$succeed(
+									{subtopics: subtopics, topic: topic});
+							});
+					}))),
+		function (gallery) {
+			return _elm_lang$core$Json_Decode$succeed(
+				{gallery: gallery});
+		})
 };
 
 var Elm = {};

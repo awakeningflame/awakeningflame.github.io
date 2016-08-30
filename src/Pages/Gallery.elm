@@ -1,28 +1,19 @@
 module Pages.Gallery exposing (..)
 
 import Pages.Gallery.Exhibit as Exhibit
-import Links exposing (Links)
+import Links exposing (Links, AppLink (..))
 
 import Html            exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events     exposing (..)
 import Html.App        as Html
 
+import Array exposing (Array)
 import String
 
 
-type alias Model a =
-  { topics : Array
-      { topic : String
-      , subtopics : Array
-          { subtopic : String
-          , images : List
-              { url : String
-              , name : String
-              }
-          }
-      , activeSubtopic : Int
-      }
+type alias Model =
+  { topics : Array Topic
   , activeTopic : Int
   }
 
@@ -31,17 +22,26 @@ type Msg
   | SetActiveSubTopic Int
 
 
-init : List { topic : String
-            , subtopics : List
-                { subtopic : String
-                , images : List
-                    { url : String
-                    , name : String
+type alias Topic =
+  { topic : String
+  , subtopics : Array Subtopic
+  , activeSubtopic : Int
+  }
+
+type alias Subtopic =
+  { subtopic : String
+  , items    : List { item   : String
+                    , images : Exhibit.Images
                     }
-                }
-            } -> Model
+  }
+
+
+init : List { topic     : String
+            , subtopics : List Subtopic
+            }
+    -> Model
 init xs =
-  { topics = List.map
+  { topics = Array.map
                (\x -> { topic = x.topic
                       , subtopics = Array.fromList x.subtopics
                       , activeSubtopic = 0
@@ -50,6 +50,7 @@ init xs =
           <| Array.fromList xs
   , activeTopic = 0
   }
+
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
@@ -64,63 +65,93 @@ update action model =
                then { t | activeSubtopic = st }
                else t
             ) model.topics
-      }
+      } ! []
 
 
-view : Links a -> Model a -> List (Html a)
+mkId : AppLink -> String
+mkId l =
+  case String.uncons <| Links.printAppLinks l of
+    Nothing    -> Debug.crash "printing a link isn't a hash"
+    Just (h,x) ->
+      if h == '#'
+      then x
+      else Debug.crash "printing a link isn't a hash"
+
+
+viewSubtopic : Links a
+            -> { topic : String }
+            -> Maybe Subtopic
+            -> List (Html a)
+viewSubtopic links {topic} mX =
+  case mX of
+    Nothing -> []
+    Just {subtopic,items} ->
+      List.concat (List.map (\{item,images} ->
+        [ h2 [ class "ui header"
+             , id <| mkId <| AppGallery
+                 { topic = Just (topic,
+                     { subtopic = Just (subtopic,
+                         { item = Just (item, { image = Nothing }) })
+                     })
+                 }
+             , onClick <| links.toGallery
+                 { topic = Just (topic,
+                     { subtopic = Just (subtopic,
+                         { item = Just (item, { image = Nothing }) })
+                     })
+                 }
+             ] [text item]
+        , Exhibit.view links
+            { topic = topic
+            , subtopic = subtopic
+            , item = item
+            } images
+        , div [class "ui divider"] []
+        ]) items)
+
+
+viewTopic : Links a
+         -> Maybe Topic
+         -> List (Html a)
+viewTopic links mX =
+  case mX of
+    Nothing -> []
+    Just {topic,subtopics,activeSubtopic} ->
+      viewSubtopic links {topic = topic} (Array.get activeSubtopic subtopics)
+
+
+view : Links a -> Model -> List (Html (Result Msg a))
 view links model =
-  let viewTopic mX =
-        let viewSubtopic mX =
-              case mX of
-                Nothing -> []
-                Just {subtopic,activeSubtopic,images}
-                  [ h3  [ class "ui header"
-                        , id <| case String.uncons <| printAppLinks <| AppGallery
-                                        <| Just (topic, Just (subtopic, Nothing)) of
-                                  Nothing    -> Debug.crash "printing a link isn't a hash"
-                                  Just (h,x) ->
-                                    if h == '#'
-                                    then x
-                                    else Debug.crash "printing a link isn't a hash"
-                        , onClick <| links.toGallery
-                                  <| Just (topic, Just (subtopic, Nothing))
-                        ] [text subtopic]
-                  , 
-                  ]
-
-        in  case mX of
-              Nothing -> []
-              Just {topic,subtopics,activeSubtopic} ->
-                [h2 [class "ui header"] [text topic]]
-                ++ viewSubtopic (Array.get activeSubtopic subtopics)
-
-  in  [ div [class "one column row"]
-          [ div [class "column"]
-              [ div [class "top attached tabular menu"]
-                  <| List.map
-                       (\(idx, {topic, subtopics}) ->
-                           a [ class <| "item"
-                                 ++ if idx == model.activeTopic
-                                    then " active"
-                                    else ""
-                             , onClick <| SetActiveTopic idx
-                             ] [text topic]
-                       )
-                  <| Array.toIndexedList model.topics
-              , div [class "ui bottom attached segment"
-                  <| [ div [class "ui secondary menu"]
-                         <| case Array.get model.activeTopic model.topics of
-                              Nothing -> Debug.crash "inconsistent array"
-                              Just {subtopics,activeSubtopic} ->
-                                let go (idx,{subtopic}) ->
-                                      a [ class <| "item"
-                                            if idx == activeSubtopic
+  [ div [class "one column row"]
+      [ div [class "column"]
+          [ div [class "ui top attached tabular menu"]
+              <| List.map
+                   (\ (idx, {topic, subtopics}) ->
+                       a [ class <| "item"
+                             ++ if idx == model.activeTopic
+                                then " active"
+                                else ""
+                         , onClick <| Err <| SetActiveTopic idx
+                         ] [text topic]
+                   )
+              <| Array.toIndexedList model.topics
+          , div [ class "ui bottom attached segment"
+                ]
+              <| [ div [class "ui secondary pointing menu"]
+                     <| case Array.get model.activeTopic model.topics of
+                          Nothing -> Debug.crash "inconsistent array"
+                          Just {subtopics,activeSubtopic} ->
+                            let go (idx,{subtopic}) =
+                                  a [ class <| "item"
+                                        ++  if idx == activeSubtopic
                                             then " active"
                                             else ""
-                                        , onClick <| SetActiveSubTopic idx
-                                        ] [text subtopic]
-                                in  List.map go (Array.toIndexedList subtopics)
-                     ] ++ viewTopic (Array.get model.activeTopic model.topics)
-              ]
+                                    , onClick <| Err <| SetActiveSubTopic idx
+                                    ] [text subtopic]
+                            in  List.map go (Array.toIndexedList subtopics)
+                 ] ++ ( List.map (Html.map Ok)
+                     <| viewTopic links (Array.get model.activeTopic model.topics)
+                      )
           ]
       ]
+  ]

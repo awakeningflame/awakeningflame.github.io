@@ -44,7 +44,8 @@ view links model =
             ++ case model.currentPage of
                  AppGallery _ -> " active"
                  _            -> ""
-        , onClick <| Ok <| links.toGallery Nothing
+        , onClick <| Ok <| links.toGallery
+            { topic = Nothing }
         ]
         [ i [class "icon camera retro"] []
         , text "Gallery"

@@ -8,16 +8,27 @@ import Process
 import Http
 
 
-type alias Either a b = Result a b
+
+type alias GallerySub =
+  { topic : Maybe
+      ( String
+      , { subtopic : Maybe
+            ( String
+            ,   { item : Maybe
+                    ( String
+                    , { image : Maybe String
+                      }
+                    )
+                }
+            )
+        }
+      )
+  }
+
 
 type AppLink
   = AppHome
-  | AppGallery ( Maybe ( String
-                       , Maybe ( String
-                               , Maybe String
-                               )
-                       )
-               )
+  | AppGallery GallerySub
   | AppContact
   | AppNotFound String
 
@@ -32,7 +43,7 @@ parseAppLinks s =
         else if String.startsWith "gallery" s'
         then let s'' = String.dropLeft 7 s'
              in case String.uncons s'' of
-                  Nothing -> AppGallery Nothing
+                  Nothing -> AppGallery { topic = Nothing }
                   Just (c,h) ->
                     if c /= '/'
                     then AppNotFound s
@@ -40,18 +51,34 @@ parseAppLinks s =
                       let ss = List.map Http.uriDecode <| String.split "/" h
                       in  case ss of
                             (topic :: []) ->
-                              AppGallery <| Just (topic, Nothing)
+                              AppGallery
+                                { topic = Just (topic, { subtopic = Nothing })
+                                }
                             (topic :: subtopic :: []) ->
-                              AppGallery <| Just (topic, Just (subtopic, Nothing))
-                            (topic :: subtopic :: name :: []) ->
-                              AppGallery <| Just (topic, Just (subtopic, Just name))
+                              AppGallery
+                                { topic = Just (topic,
+                                    { subtopic = Just (subtopic, { item = Nothing })
+                                    }
+                                )}
+                            (topic :: subtopic :: item :: []) ->
+                              AppGallery
+                                { topic = Just (topic,
+                                    { subtopic = Just (subtopic,
+                                        { item = Just (item, { image = Nothing })
+                                        }
+                                    )}
+                                )}
+                            (topic :: subtopic :: item :: image :: []) ->
+                              AppGallery
+                                { topic = Just (topic,
+                                    { subtopic = Just (subtopic,
+                                        { item = Just (item,
+                                            { image = Just image
+                                            }
+                                        )}
+                                    )}
+                                )}
                             _ -> AppNotFound s
-                    then AppGallery <| Just <| Left
-                      { header = Http.uriDecode h }
-                    else if c == '~'
-                    then AppGallery <| Just <| Right
-                      { focus = Http.uriDecode h }
-                    else AppNotFound s
         else if s' == "contact"
         then AppContact
         else AppNotFound s'
@@ -69,18 +96,23 @@ printAppLinks l =
   let printed =
         case l of
           AppHome       -> "home"
-          AppGallery mH -> "gallery"
-                       ++ case mT of
-                            Nothing -> ""
-                            Just (topic,mS) ->
-                              "/" ++ Http.uriEncode topic
-                                ++ case mS of
-                                     Nothing -> ""
-                                     Just (subtopic,mN) ->
-                                       "/" ++ Http.uriEncode subtopic
-                                         ++ case mN of
-                                              Nothing -> ""
-                                              Just name -> Http.uriEncode name
+          AppGallery mT -> "gallery"
+            ++ case mT.topic of
+                 Nothing -> ""
+                 Just (topic,mS) ->
+                   "/" ++ Http.uriEncode topic
+                     ++ case mS.subtopic of
+                          Nothing -> ""
+                          Just (subtopic,mI) ->
+                            "/" ++ Http.uriEncode subtopic
+                              ++ case mI.item of
+                                   Nothing -> ""
+                                   Just (item,mN) ->
+                                     "/" ++ Http.uriEncode item
+                                       ++ case mN.image of
+                                            Nothing -> ""
+                                            Just image ->
+                                              "/" ++ Http.uriEncode image
           AppContact    -> "contact"
           AppNotFound _ -> "not-found"
   in  "#" ++ printed
@@ -88,7 +120,7 @@ printAppLinks l =
 
 type alias Links a =
   { toHome    : a
-  , toGallery : Maybe (String, Maybe (String, Maybe String)) -> a
+  , toGallery : GallerySub -> a
   , toContact : a
   }
 

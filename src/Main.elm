@@ -15,18 +15,37 @@ import Html.Events     exposing (..)
 import Html.App        as Html
 import Navigation
 import Window
+import Dict exposing (Dict)
 
 import Cmd.Extra as Task exposing (mkCmd)
 
+
+
+type alias GalleryTrie =
+  Dict String (Dict String (Dict String (Dict String { url : String})))
+
+
+getImageUrl : (String,String,String,String) -> GalleryTrie -> Maybe { url : String }
+getImageUrl (topic,subtopic,item,name) ts =
+  Dict.get topic ts
+    `Maybe.andThen`
+  (\t -> Dict.get subtopic t
+           `Maybe.andThen`
+         (\s -> Dict.get item s
+                  `Maybe.andThen` (Dict.get name)
+         )
+  )
 
 
 type alias Model =
   { currentPage : AppLink
   , nav         : Nav.Model
   , windowSize  : Responsive.WindowSize
+  , height      : Int
   , modals      : { galleryFocus : GalleryFocus.Model Msg
                   }
-  , pages       : { gallery : Gallery.Model Msg
+  , pages       : { gallery : Gallery.Model
+                  , galleryTrie : GalleryTrie
                   }
   }
 
@@ -37,19 +56,15 @@ type Msg
   | ChangeWindowSize {height : Int, width : Int}
   | NavMsg Nav.Msg
   | GalleryFocusMsg (GalleryFocus.Msg Msg)
+  | CloseGalleryFocus AppLink
+  | GalleryMsg      Gallery.Msg
 
 
 
 type alias Flags =
   { gallery : List
       { topic : String
-      , subtopics : List
-          { subtopic : String
-          , images   : List
-              { url  : String
-              , name : String
-              }
-          }
+      , subtopics : List Gallery.Subtopic
       }
   }
 
@@ -59,12 +74,33 @@ init flags link =
   { currentPage = link
   , nav         = Nav.init link
   , windowSize  = Responsive.Mobile
+  , height      = 0
   , modals      = { galleryFocus = GalleryFocus.init
                   }
-  , pages       = { gallery = { gallery = Gallery.init flags.gallery }
+  , pages       = { gallery = Gallery.init flags.gallery
+                  , galleryTrie =
+                      Dict.fromList <|
+                        List.map (\t ->
+                          ( t.topic
+                          , Dict.fromList <|
+                              List.map (\s ->
+                                ( s.subtopic
+                                , Dict.fromList <|
+                                    List.map (\i ->
+                                      ( i.item
+                                      , Dict.fromList <|
+                                          List.map (\x -> (x.name, { url = x.url }))
+                                            i.images
+                                      ))
+                                      s.items
+                                ))
+                                t.subtopics
+                          ))
+                          flags.gallery
                   }
   } ! [ Links.notFoundRedirect link <| ToPage AppHome
       , Cmd.map ChangeWindowSize <| Task.performLog Window.size
+      , mkCmd <| ChangePage link
       ]
 
 
@@ -73,16 +109,53 @@ update action model =
   case action of
     ChangePage p ->
       { model | currentPage = p
-      } ! [mkCmd <| NavMsg <| Nav.ChangePage p]
+      } ! [ mkCmd <| NavMsg <| Nav.ChangePage p
+          , let failPage = mkCmd <| ToPage <| AppNotFound <| Links.printAppLinks p
+            in  case p of
+                  AppGallery { topic } ->
+                    case topic of
+                      Nothing -> Cmd.none
+                      Just (topic, { subtopic }) ->
+                        case Dict.get topic model.pages.galleryTrie of
+                          Nothing -> failPage
+                          Just s ->
+                            case subtopic of
+                              Nothing -> Cmd.none
+                              Just (subtopic, { item }) ->
+                                case Dict.get subtopic s of
+                                  Nothing -> failPage
+                                  Just i ->
+                                    case item of
+                                      Nothing -> Cmd.none
+                                      Just (item, { image }) ->
+                                        case Dict.get item i of
+                                          Nothing -> failPage
+                                          Just x ->
+                                            case image of
+                                              Nothing -> Cmd.none
+                                              Just name ->
+                                                case Dict.get name x of
+                                                  Nothing -> failPage
+                                                  Just {url} ->
+                                                    mkCmd <| GalleryFocusMsg <| GalleryFocus.Focus
+                                                      { url = url
+                                                      , name = name
+                                                      , onUnFocus = CloseGalleryFocus <|
+                                                          AppGallery
+                                                            { topic = Just (topic,
+                                                            { subtopic = Just (subtopic,
+                                                            { item = Just (item,
+                                                            { image = Nothing })})})}
+                                                      }
+                  _ -> Cmd.none
+          ]
     ToPage p ->
       model ! [ mkCmd <| ChangePage p
               , Navigation.newUrl <| Links.printAppLinks p
-              , case p of
-                  AppGallery (Just (topic, Just (subtopic, Just name))) ->
-                    mkCmd <| GalleryFocusMsg <| GalleryFocus.Focus
               ]
     ChangeWindowSize s ->
       { model | windowSize = Responsive.fromWidth s.width
+              , height     = s.height
       } ! []
     NavMsg a ->
       let (nav,eff) = Nav.update a model.nav
@@ -93,6 +166,15 @@ update action model =
                              in  { m | galleryFocus = g
                                  }
           } ! [Cmd.map GalleryFocusMsg eff]
+    CloseGalleryFocus l ->
+      model ! [ mkCmd <| GalleryFocusMsg <| GalleryFocus.UnFocus
+              , mkCmd <| ToPage l
+              ]
+    GalleryMsg a ->
+      let (g,eff) = Gallery.update a model.pages.gallery
+      in  { model | pages = let p = model.pages
+                            in  { p | gallery = g }
+          } ! [Cmd.map GalleryMsg eff]
 
 
 view : Model -> Html Msg
@@ -109,7 +191,18 @@ view model =
               ]
             <| viewCurrentPage model
         ]
-    , GalleryFocus.view model.modals.galleryFocus
+    , div ( [ class <| "ui dimmer modals page transition"
+                ++ case model.modals.galleryFocus.focus of
+                     Nothing -> " hidden"
+                     Just _  -> " visible active"
+            ] ++ case model.modals.galleryFocus.focus of
+                   Nothing -> []
+                   Just {onUnFocus} ->
+                     [ onClick onUnFocus
+                     ]
+          )
+        [ GalleryFocus.view { height = model.height } model.modals.galleryFocus
+        ]
     ]
 
 
@@ -117,44 +210,10 @@ viewCurrentPage : Model -> List (Html Msg)
 viewCurrentPage model =
   case model.currentPage of
     AppHome       -> Home.view {windowSize = model.windowSize}
-    AppGallery _  -> Gallery.view links
-                       [ ("Steampunk Fedora"
-                         , [ ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           , ( "images/hat/1.jpg"
-                             , ChangePage AppContact
-                             )
-                           ]
-                         )
-                       ]
+    AppGallery _  -> List.map (Html.map (\r -> case r of
+                                          Err x -> GalleryMsg x
+                                          Ok  x -> x))
+                       <| Gallery.view links model.pages.gallery
     AppContact    -> Contact.view
     AppNotFound s -> NotFound.view s
 
@@ -190,8 +249,8 @@ links =
 ------
 
 
-main : Program Never
-main = Navigation.program urlParser
+main : Program Flags
+main = Navigation.programWithFlags urlParser
          { init          = init
          , update        = update
          , view          = view

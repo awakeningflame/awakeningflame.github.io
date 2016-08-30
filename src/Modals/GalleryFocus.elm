@@ -1,4 +1,4 @@
-module Modals.GalleryFocus where
+module Modals.GalleryFocus exposing (..)
 
 import Html            exposing (..)
 import Html.Attributes exposing (..)
@@ -36,26 +36,26 @@ update action model =
       { model | focus = Nothing } ! []
 
 
-view : Model a -> Html (Result (Msg a) a)
-view model =
-  div [ class <| "ui modal"
-          case model.focus of
-            Nothing -> " hidden"
-            Just _  -> " visible active"
+view : {height : Int} -> Model a -> Html a
+view {height} model =
+  div [ class <| "ui scrolling fullscreen basic modal"
+          ++  case model.focus of
+                Nothing -> " hidden"
+                Just _  -> " visible active"
       ]
     <| case model.focus of
          Nothing -> []
          Just {url,name,onUnFocus} ->
-            [ div [class "header"] [text name]
-            , div [class "image content"]
-                [ img [src url, class "image"] []
-                ]
-            , div [class "actions"]
-                [ button [ class "ui button"
-                         , onClick <| Ok onUnFocus
-                         ]
-                    [ i [class "icon close"] []
-                    , text "Close"
-                    ]
+            [ i [ class "icon close"
+                , onClick onUnFocus
+                , style [("color", "#fff")]
+                ] []
+            , div [class "header"] [text name]
+            , div [ class "image content"
+                  ]
+                [ img [ src url
+                      , class "ui centered image"
+                      , style [("max-height", toString (height - 150) ++ "px")]
+                      ] []
                 ]
             ]

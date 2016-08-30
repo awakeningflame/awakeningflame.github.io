@@ -4,18 +4,39 @@ import Html            exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events     exposing (..)
 
+import Links exposing (Links)
 
 
-view : List (String, a) -> Html a
-view urls =
-  let viewItem (url,toView) =
+type alias Images = List {url : String, name : String}
+
+
+
+view : Links a
+    -> { topic    : String
+       , subtopic : String
+       , item     : String
+       }
+    -> Images
+    -> Html a
+view links {topic,subtopic,item} xs =
+  let viewItem {url,name} =
         img [ src url
             , style [("display", "inline-block")]
             , class "ui small rounded image"
-            , onClick toView
+            , onClick <| links.toGallery
+                { topic = Just (topic,
+                    { subtopic = Just (subtopic,
+                        { item = Just (item,
+                            { image = Just name
+                            })
+                        })
+                    })
+                }
             ] []
+            -- TODO: Make continuous thingy
   in  div [ style [ ("text-align", "center")
                   , ("white-space", "nowrap")
+                  , ("overflow-x", "hidden")
                   ]
           ]
-        <| List.map viewItem urls
+        <| List.map viewItem xs
