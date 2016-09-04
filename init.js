@@ -73,14 +73,104 @@ var app = Elm.Main.fullscreen({
                     ]
                 },
                 {
-                    subtopic : "Fuckin Dank Bongs",
+                    subtopic : "Pendants",
                     items : [
                         {
-                            item : "A dank bong",
+                            item : "Pendants",
                             images : [
                                 {
-                                    url : "http://www.theblaze.com/wp-content/uploads/2010/12/bong-baby.jpg",
-                                    name : "Baby lol"
+                                    url : "images/pendants/1.jpg",
+                                    name : "1"
+                                },
+                                {
+                                    url : "images/pendants/2.jpg",
+                                    name : "2"
+                                },
+                                {
+                                    url : "images/pendants/3.jpg",
+                                    name : "3"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    subtopic : "Dabbers",
+                    items : [
+                        {
+                            item : "Dabbers",
+                            images : [
+                                {
+                                    url : "images/dabbers/1.jpg",
+                                    name : "1"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            topic : "Minerals",
+            subtopics : [
+                {
+                    subtopic : "Minerals",
+                    items : [
+                        {
+                            item : "1",
+                            images : [
+                                {
+                                    url : "images/minerals/blue1.jpg",
+                                    name : "1"
+                                }
+                            ]
+                        },
+                        {
+                            item : "2",
+                            images : [
+                                {
+                                    url : "images/minerals/fibb.jpg",
+                                    name : "2"
+                                }
+                            ]
+                        },
+                        {
+                            item : "Moldevite",
+                            images : [
+                                {
+                                    url : "images/minerals/moldevite1.jpg",
+                                    name : "1"
+                                },
+                                {
+                                    url : "images/minerals/moldevite2.jpg",
+                                    name : "2"
+                                }
+                            ]
+                        },
+                        {
+                            item : "Opal",
+                            images : [
+                                {
+                                    url : "images/minerals/opal.jpg",
+                                    name : "1"
+                                }
+                            ]
+                        },
+                        {
+                            item : "??",
+                            images : [
+                                {
+                                    url : "images/minerals/orange.jpg",
+                                    name : "1"
+                                }
+                            ]
+                        },
+                        {
+                            item : "?que?",
+                            images : [
+                                {
+                                    url : "images/minerals/tourmeline1.jpg",
+                                    name : "1"
                                 }
                             ]
                         }
@@ -94,6 +184,15 @@ var app = Elm.Main.fullscreen({
                 {
                     subtopic : "Accessories",
                     items : [
+                        {
+                            item : "Monocole",
+                            images : [
+                                {
+                                    url : "images/monocole/1.jpg",
+                                    name : "1"
+                                }
+                            ]
+                        },
                         {
                             item : "Badge",
                             images : [
