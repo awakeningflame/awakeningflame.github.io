@@ -2,17 +2,71 @@
 var app = Elm.Main.fullscreen({
     gallery : [
         {
-            topic : "Pipes",
+            topic : "Glass",
             subtopics : [
                 {
-                    subtopic : "Spoons",
+                    subtopic : "Pipes",
                     items : [
                         {
-                            item : "Lawl just a spoon",
+                            item : "Spoons",
                             images : [
                                 {
-                                    url : "http://weknowyourdreams.com/images/spoon/spoon-06.jpg",
-                                    name : "GETIT?"
+                                    url : "images/pipes/1.jpg",
+                                    name : "1"
+                                },
+                                {
+                                    url : "images/pipes/2.jpg",
+                                    name : "2"
+                                },
+                                {
+                                    url : "images/pipes/3.jpg",
+                                    name : "3"
+                                },
+                                {
+                                    url : "images/pipes/4.jpg",
+                                    name : "4"
+                                },
+                                {
+                                    url : "images/pipes/9.jpg",
+                                    name : "9"
+                                },
+                                {
+                                    url : "images/pipes/10.jpg",
+                                    name : "10"
+                                },
+                                {
+                                    url : "images/pipes/11.jpg",
+                                    name : "11"
+                                },
+                            ]
+                        },
+                        {
+                            item : "Sherlocks",
+                            images : [
+                                {
+                                    url : "images/pipes/5.jpg",
+                                    name : "5"
+                                },
+                                {
+                                    url : "images/pipes/6.jpg",
+                                    name : "6"
+                                },
+                                {
+                                    url : "images/pipes/7.jpg",
+                                    name : "7"
+                                },
+                                {
+                                    url : "images/pipes/8.jpg",
+                                    name : "8"
+                                }
+                            ]
+                        },
+                        {
+                            item : "Chillums",
+                            images : [
+                                {
+                                    url : "images/pipes/12.jpg",
+                                    name : "12"
                                 }
                             ]
                         }
@@ -37,6 +91,41 @@ var app = Elm.Main.fullscreen({
         {
             topic : "Apparel",
             subtopics : [
+                {
+                    subtopic : "Accessories",
+                    items : [
+                        {
+                            item : "Badge",
+                            images : [
+                                {
+                                    url : "images/badge/1.jpg",
+                                    name : "1"
+                                }
+                            ]
+                        },
+                        {
+                            item : "Bracelet",
+                            images : [
+                                {
+                                    url : "images/bracelet/1.jpg",
+                                    name : "1"
+                                },
+                                {
+                                    url : "images/bracelet/2.jpg",
+                                    name : "2"
+                                },
+                                {
+                                    url : "images/bracelet/3.jpg",
+                                    name : "3"
+                                },
+                                {
+                                    url : "images/bracelet/4.jpg",
+                                    name : "4"
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     subtopic : "Hats",
                     items : [
