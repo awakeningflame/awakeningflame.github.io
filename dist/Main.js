@@ -9207,7 +9207,8 @@ var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = F3(
 						_elm_lang$html$Html_Attributes$style(
 						_elm_lang$core$Native_List.fromArray(
 							[
-								{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'}
+								{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'},
+								{ctor: '_Tuple2', _0: 'cursor', _1: 'pointer'}
 							])),
 						_elm_lang$html$Html_Attributes$class('ui small rounded image'),
 						_elm_lang$html$Html_Events$onClick(

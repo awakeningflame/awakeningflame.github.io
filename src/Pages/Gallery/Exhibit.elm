@@ -21,7 +21,7 @@ view : Links a
 view links {topic,subtopic,item} xs =
   let viewItem {url,name} =
         img [ src url
-            , style [("display", "inline-block")]
+            , style [("display", "inline-block"),("cursor","pointer")]
             , class "ui small rounded image"
             , onClick <| links.toGallery
                 { topic = Just (topic,
