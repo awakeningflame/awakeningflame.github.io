@@ -38,6 +38,22 @@ var app = Elm.Main.fullscreen({
                                     url : "images/pipes/11.jpg",
                                     name : "11"
                                 },
+                                {
+                                    url : "images/pipes/13.jpg",
+                                    name : "13"
+                                },
+                                {
+                                    url : "images/pipes/13-1.jpg",
+                                    name : "13-1"
+                                },
+                                {
+                                    url : "images/pipes/14.jpg",
+                                    name : "14"
+                                },
+                                {
+                                    url : "images/pipes/14-1.jpg",
+                                    name : "14-1"
+                                }
                             ]
                         },
                         {
@@ -58,6 +74,10 @@ var app = Elm.Main.fullscreen({
                                 {
                                     url : "images/pipes/8.jpg",
                                     name : "8"
+                                },
+                                {
+                                    url : "images/pipes/16.jpg",
+                                    name : "16"
                                 }
                             ]
                         },
@@ -67,6 +87,14 @@ var app = Elm.Main.fullscreen({
                                 {
                                     url : "images/pipes/12.jpg",
                                     name : "12"
+                                },
+                                {
+                                    url : "images/pipes/15.jpg",
+                                    name : "15"
+                                },
+                                {
+                                    url : "images/pipes/15-1.jpg",
+                                    name : "15-1"
                                 }
                             ]
                         }
