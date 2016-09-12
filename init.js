@@ -117,7 +117,7 @@ var app = Elm.Main.fullscreen({
                     subtopic : "Minerals",
                     items : [
                         {
-                            item : "1",
+                            item : "Cavansite",
                             images : [
                                 {
                                     url : "images/minerals/blue1.jpg",
@@ -126,7 +126,7 @@ var app = Elm.Main.fullscreen({
                             ]
                         },
                         {
-                            item : "2",
+                            item : "Ammonite",
                             images : [
                                 {
                                     url : "images/minerals/fibb.jpg",
@@ -135,7 +135,7 @@ var app = Elm.Main.fullscreen({
                             ]
                         },
                         {
-                            item : "Moldevite",
+                            item : "Moldavite",
                             images : [
                                 {
                                     url : "images/minerals/moldevite1.jpg",
@@ -148,7 +148,7 @@ var app = Elm.Main.fullscreen({
                             ]
                         },
                         {
-                            item : "Opal",
+                            item : "Ethiopian Opal",
                             images : [
                                 {
                                     url : "images/minerals/opal.jpg",
@@ -157,7 +157,7 @@ var app = Elm.Main.fullscreen({
                             ]
                         },
                         {
-                            item : "??",
+                            item : "Mexican Fire Agate",
                             images : [
                                 {
                                     url : "images/minerals/orange.jpg",
@@ -166,7 +166,7 @@ var app = Elm.Main.fullscreen({
                             ]
                         },
                         {
-                            item : "?que?",
+                            item : "Tanzanite",
                             images : [
                                 {
                                     url : "images/minerals/tourmeline1.jpg",
