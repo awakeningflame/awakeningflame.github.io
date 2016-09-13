@@ -9201,55 +9201,69 @@ var _awakeiningflame$awakeningflame$Pages_Home$Config = function (a) {
 	return {windowSize: a};
 };
 
+var _elm_lang$html$Html_Keyed$node = _elm_lang$virtual_dom$VirtualDom$keyedNode;
+var _elm_lang$html$Html_Keyed$ol = _elm_lang$html$Html_Keyed$node('ol');
+var _elm_lang$html$Html_Keyed$ul = _elm_lang$html$Html_Keyed$node('ul');
+
 var _awakeiningflame$awakeningflame$Pages_Gallery_Exhibit$view = F3(
 	function (links, _p0, xs) {
 		var _p1 = _p0;
 		var viewItem = function (_p2) {
 			var _p3 = _p2;
-			return A2(
-				_elm_lang$html$Html$img,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$src(_p3.url),
-						_elm_lang$html$Html_Attributes$style(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'},
-								{ctor: '_Tuple2', _0: 'cursor', _1: 'pointer'}
-							])),
-						_elm_lang$html$Html_Attributes$class('ui small rounded image'),
-						_elm_lang$html$Html_Events$onClick(
-						links.toGallery(
-							{
-								topic: _elm_lang$core$Maybe$Just(
-									{
-										ctor: '_Tuple2',
-										_0: _p1.topic,
-										_1: {
-											subtopic: _elm_lang$core$Maybe$Just(
-												{
-													ctor: '_Tuple2',
-													_0: _p1.subtopic,
-													_1: {
-														item: _elm_lang$core$Maybe$Just(
-															{
-																ctor: '_Tuple2',
-																_0: _p1.item,
-																_1: {
-																	image: _elm_lang$core$Maybe$Just(_p3.name)
-																}
-															})
-													}
-												})
-										}
-									})
-							}))
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[]));
+			var _p5 = _p3.url;
+			var _p4 = _p3.name;
+			return {
+				ctor: '_Tuple2',
+				_0: A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p5,
+					A2(_elm_lang$core$Basics_ops['++'], '/', _p4)),
+				_1: A2(
+					_elm_lang$html$Html$img,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$src(_p5),
+							_elm_lang$html$Html_Attributes$style(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									{ctor: '_Tuple2', _0: 'display', _1: 'inline-block'},
+									{ctor: '_Tuple2', _0: 'cursor', _1: 'pointer'}
+								])),
+							_elm_lang$html$Html_Attributes$class('ui small rounded image'),
+							_elm_lang$html$Html_Events$onClick(
+							links.toGallery(
+								{
+									topic: _elm_lang$core$Maybe$Just(
+										{
+											ctor: '_Tuple2',
+											_0: _p1.topic,
+											_1: {
+												subtopic: _elm_lang$core$Maybe$Just(
+													{
+														ctor: '_Tuple2',
+														_0: _p1.subtopic,
+														_1: {
+															item: _elm_lang$core$Maybe$Just(
+																{
+																	ctor: '_Tuple2',
+																	_0: _p1.item,
+																	_1: {
+																		image: _elm_lang$core$Maybe$Just(_p4)
+																	}
+																})
+														}
+													})
+											}
+										})
+								}))
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[]))
+			};
 		};
-		return A2(
-			_elm_lang$html$Html$div,
+		return A3(
+			_elm_lang$html$Html_Keyed$node,
+			'div',
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_elm_lang$html$Html_Attributes$style(
