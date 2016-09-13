@@ -9673,11 +9673,158 @@ var _awakeiningflame$awakeningflame$Pages_Contact$view = _elm_lang$core$Native_L
 								_elm_lang$html$Html$h1,
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html_Attributes$class('ui header')
+										_elm_lang$html$Html_Attributes$class('ui dividing header')
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
 										_elm_lang$html$Html$text('Contact')
+									])),
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('ui stackable grid')
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										A2(
+										_elm_lang$html$Html$div,
+										_elm_lang$core$Native_List.fromArray(
+											[
+												_elm_lang$html$Html_Attributes$class('row')
+											]),
+										_elm_lang$core$Native_List.fromArray(
+											[
+												A2(
+												_elm_lang$html$Html$div,
+												_elm_lang$core$Native_List.fromArray(
+													[
+														_elm_lang$html$Html_Attributes$class('eight wide column')
+													]),
+												_elm_lang$core$Native_List.fromArray(
+													[
+														A2(
+														_elm_lang$html$Html$p,
+														_elm_lang$core$Native_List.fromArray(
+															[]),
+														_elm_lang$core$Native_List.fromArray(
+															[
+																_elm_lang$html$Html$text('\nYou\'re more than welcome to call me on my celll phooone, but in case I don\'t answer,\nfeel free to leave a voicemail, or drop me a line on my email.\n')
+															]))
+													])),
+												A2(
+												_elm_lang$html$Html$div,
+												_elm_lang$core$Native_List.fromArray(
+													[
+														_elm_lang$html$Html_Attributes$class('eight wide column')
+													]),
+												_elm_lang$core$Native_List.fromArray(
+													[
+														A2(
+														_elm_lang$html$Html$div,
+														_elm_lang$core$Native_List.fromArray(
+															[
+																_elm_lang$html$Html_Attributes$class('ui list')
+															]),
+														_elm_lang$core$Native_List.fromArray(
+															[
+																A2(
+																_elm_lang$html$Html$a,
+																_elm_lang$core$Native_List.fromArray(
+																	[
+																		_elm_lang$html$Html_Attributes$class('ui item'),
+																		_elm_lang$html$Html_Attributes$href('tel:1-303-909-5347')
+																	]),
+																_elm_lang$core$Native_List.fromArray(
+																	[
+																		A2(
+																		_elm_lang$html$Html$i,
+																		_elm_lang$core$Native_List.fromArray(
+																			[
+																				_elm_lang$html$Html_Attributes$class('phone icon')
+																			]),
+																		_elm_lang$core$Native_List.fromArray(
+																			[])),
+																		A2(
+																		_elm_lang$html$Html$div,
+																		_elm_lang$core$Native_List.fromArray(
+																			[
+																				_elm_lang$html$Html_Attributes$class('content')
+																			]),
+																		_elm_lang$core$Native_List.fromArray(
+																			[
+																				A2(
+																				_elm_lang$html$Html$div,
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html_Attributes$class('header')
+																					]),
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html$text('+1 (303) 909 - 5347')
+																					])),
+																				A2(
+																				_elm_lang$html$Html$div,
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html_Attributes$class('description')
+																					]),
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html$text('cell')
+																					]))
+																			]))
+																	])),
+																A2(
+																_elm_lang$html$Html$a,
+																_elm_lang$core$Native_List.fromArray(
+																	[
+																		_elm_lang$html$Html_Attributes$class('ui item'),
+																		_elm_lang$html$Html_Attributes$href('mailto:kevinpeterman29@gmail.com')
+																	]),
+																_elm_lang$core$Native_List.fromArray(
+																	[
+																		A2(
+																		_elm_lang$html$Html$i,
+																		_elm_lang$core$Native_List.fromArray(
+																			[
+																				_elm_lang$html$Html_Attributes$class('mail icon')
+																			]),
+																		_elm_lang$core$Native_List.fromArray(
+																			[])),
+																		A2(
+																		_elm_lang$html$Html$div,
+																		_elm_lang$core$Native_List.fromArray(
+																			[
+																				_elm_lang$html$Html_Attributes$class('content')
+																			]),
+																		_elm_lang$core$Native_List.fromArray(
+																			[
+																				A2(
+																				_elm_lang$html$Html$div,
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html_Attributes$class('header')
+																					]),
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html$text('kevinpeterman29@gmail.com')
+																					])),
+																				A2(
+																				_elm_lang$html$Html$div,
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html_Attributes$class('description')
+																					]),
+																				_elm_lang$core$Native_List.fromArray(
+																					[
+																						_elm_lang$html$Html$text('email')
+																					]))
+																			]))
+																	]))
+															]))
+													]))
+											]))
 									]))
 							]))
 					]))
