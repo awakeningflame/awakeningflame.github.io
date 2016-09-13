@@ -196,11 +196,8 @@ view model =
     , div [ style [ ("padding-top", "4rem")
                   ]
           ] -- pusher
-        [ div ( [ class "ui grid container"
-                ] ++ if Responsive.isMobile model.windowSize
-                     then [style [("margin","0 !important")]]
-                     else []
-              )
+        [ div [ class "ui grid container"
+              ]
             <| viewCurrentPage model
         ]
     , div ( [ class <| "ui dimmer modals page transition"

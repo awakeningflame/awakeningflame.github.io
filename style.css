@@ -6,3 +6,10 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#271e3f', endColorstr='#36174f',GradientType=1 );
     background-attachment: fixed;
 }
+
+@media (max-width: 1126px) {
+    .ui.grid.container {
+        margin-left:  0px !important;
+        margin-right: 0px !important;
+    }
+}
