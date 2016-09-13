@@ -18,7 +18,10 @@ view config =
       [ div [class "column"]
           [ div [class "ui clearing segment"]
               [ logo config
-              , img [ class "ui medium rounded left floated image"
+              , img [ class <| "ui rounded left floated image" ++
+                               if Responsive.isMobile config.windowSize
+                               then " small"
+                               else " medium"
                     , src "images/kevin.jpg"
                     ] []
               , h2 [class "ui header"] [text "About Kevin"]
@@ -47,7 +50,11 @@ logo config =
                ]
       , id "logo"
       ]
-      [ h1 [class "ui inverted header"]
+      [ h1 ( [ class "ui inverted header"
+             ] ++ if Responsive.isMobile config.windowSize
+                  then []
+                  else [style [("text-shadow","0px 0px 5px rgba(34, 0, 57, 1)")]]
+           )
           [ text "Awakening Flame Accessories"
           , div [class "sub header"]
               [text "Enhance Your Spirit"]

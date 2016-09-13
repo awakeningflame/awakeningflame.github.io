@@ -9102,10 +9102,21 @@ var _awakeiningflame$awakeningflame$Pages_Home$logo = function (config) {
 			[
 				A2(
 				_elm_lang$html$Html$h1,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('ui inverted header')
-					]),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('ui inverted header')
+						]),
+					_awakeiningflame$awakeningflame$Responsive$isMobile(config.windowSize) ? _elm_lang$core$Native_List.fromArray(
+						[]) : _elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$style(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									{ctor: '_Tuple2', _0: 'text-shadow', _1: '0px 0px 5px rgba(34, 0, 57, 1)'}
+								]))
+						])),
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text('Awakening Flame Accessories'),
@@ -9154,7 +9165,11 @@ var _awakeiningflame$awakeningflame$Pages_Home$view = function (config) {
 									_elm_lang$html$Html$img,
 									_elm_lang$core$Native_List.fromArray(
 										[
-											_elm_lang$html$Html_Attributes$class('ui medium rounded left floated image'),
+											_elm_lang$html$Html_Attributes$class(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'ui rounded left floated image',
+												_awakeiningflame$awakeningflame$Responsive$isMobile(config.windowSize) ? ' small' : ' medium')),
 											_elm_lang$html$Html_Attributes$src('images/kevin.jpg')
 										]),
 									_elm_lang$core$Native_List.fromArray(
@@ -10590,10 +10605,21 @@ var _awakeiningflame$awakeningflame$Main$view = function (model) {
 					[
 						A2(
 						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('ui grid container')
-							]),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('ui grid container')
+								]),
+							_awakeiningflame$awakeningflame$Responsive$isMobile(model.windowSize) ? _elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$style(
+									_elm_lang$core$Native_List.fromArray(
+										[
+											{ctor: '_Tuple2', _0: 'margin', _1: '0 !important'}
+										]))
+								]) : _elm_lang$core$Native_List.fromArray(
+								[])),
 						_awakeiningflame$awakeningflame$Main$viewCurrentPage(model))
 					])),
 				A2(
