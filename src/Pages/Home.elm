@@ -22,7 +22,6 @@ view config =
                     , src "images/kevin.jpg"
                     ] []
               , h2 [class "ui header"] [text "About Kevin"]
-              , p [] [text "Kevin's a badass slayer-pimp with fuckin' dope shit constantly CONSTANTLY GODDAMNIT"]
               , p [] [text "I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!"]
               ]
           ]

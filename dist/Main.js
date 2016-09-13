@@ -9175,14 +9175,6 @@ var _awakeiningflame$awakeningflame$Pages_Home$view = function (config) {
 										[]),
 									_elm_lang$core$Native_List.fromArray(
 										[
-											_elm_lang$html$Html$text('Kevin\'s a badass slayer-pimp with fuckin\' dope shit constantly CONSTANTLY GODDAMNIT')
-										])),
-									A2(
-									_elm_lang$html$Html$p,
-									_elm_lang$core$Native_List.fromArray(
-										[]),
-									_elm_lang$core$Native_List.fromArray(
-										[
 											_elm_lang$html$Html$text('I make wire wrap jewelry and accessories as well as blow glass! I love life I love creating I love the earth and I love you!')
 										]))
 								]))
