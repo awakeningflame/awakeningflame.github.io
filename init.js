@@ -139,7 +139,7 @@ var app = Elm.Main.fullscreen({
             ]
         },
         {
-            topic : "Minerals",
+            topic : "Jewelery",
             subtopics : [
                 {
                     subtopic : "Minerals",

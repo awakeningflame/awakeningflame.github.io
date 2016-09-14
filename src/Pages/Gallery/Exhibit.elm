@@ -20,7 +20,7 @@ view : Links a
     -> Images
     -> Html a
 view links {topic,subtopic,item} xs =
-  let -- viewItem : {url:String, name:String} -> (String, Html a)
+  let -- viewItem : {url:String, name:String} -> (String, Html a) -- doesn't typecheck?
       viewItem {url,name} =
         ( url ++ "/" ++ name
         , img [ src url
