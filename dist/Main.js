@@ -9723,7 +9723,7 @@ var _awakeiningflame$awakeningflame$Pages_Contact$view = _elm_lang$core$Native_L
 															[]),
 														_elm_lang$core$Native_List.fromArray(
 															[
-																_elm_lang$html$Html$text('\nYou\'re more than welcome to call me on my celll phooone, but in case I don\'t answer,\nfeel free to leave a voicemail, or drop me a line on my email.\n')
+																_elm_lang$html$Html$text('\nYou\'re more than welcome to ♫ call me on my celll phooone ♫ , but in case I don\'t answer,\nfeel free to leave a voicemail, or drop me a line on my email.\n')
 															]))
 													])),
 												A2(

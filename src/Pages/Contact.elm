@@ -15,7 +15,7 @@ view =
                   [ div [class "row"]
                       [ div [class "eight wide column"]
                           [ p [] [ text """
-You're more than welcome to call me on my celll phooone, but in case I don't answer,
+You're more than welcome to ♫ call me on my celll phooone ♫ , but in case I don't answer,
 feel free to leave a voicemail, or drop me a line on my email.
 """
                                  ]
